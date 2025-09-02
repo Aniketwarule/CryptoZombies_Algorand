@@ -37,6 +37,7 @@ Instead of boring theory, you’ll **learn by coding** fun blockchain-powered ga
 
 ### Clone the repo  
 
+
 ```bash
-git clone https://github.com/your-org/algozombies.git
-cd algozombies
+git clone https://github.com/Aniketwarule/CryptoZombies_Algorand.git
+cd aCryptoZombies_Algorand
