@@ -40,4 +40,4 @@ Instead of boring theory, you’ll **learn by coding** fun blockchain-powered ga
 
 ```bash
 git clone https://github.com/Aniketwarule/CryptoZombies_Algorand.git
-cd aCryptoZombies_Algorand
+cd CryptoZombies_Algorand
