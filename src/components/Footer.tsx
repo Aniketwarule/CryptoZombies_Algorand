@@ -1,3 +1,4 @@
+// Footer component with social links and navigation
 import React from 'react';
 import { Github, Twitter, ExternalLink } from 'lucide-react';
 
