@@ -1,28 +1,44 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Zap, Target, Users, Code, Globe, Award } from 'lucide-react';
+import { Zap, Target, Users, Code, Globe, Award, Shield, Rocket } from 'lucide-react';
 
 const About = () => {
   const features = [
     {
       icon: Code,
       title: 'Interactive Learning',
-      description: 'Learn by doing with real PyTeal code challenges and interactive exercises.'
+      description: 'Learn by doing with real PyTeal code challenges and interactive exercises.',
+      color: 'text-blue-500'
     },
     {
       icon: Globe,
       title: 'Blockchain Integration',
-      description: 'Deploy and test your smart contracts directly on Algorand TestNet.'
+      description: 'Deploy and test your smart contracts directly on Algorand TestNet.',
+      color: 'text-green-500'
     },
     {
       icon: Users,
       title: 'Community Driven',
-      description: 'Join a growing community of Algorand developers and builders.'
+      description: 'Join a growing community of Algorand developers and builders.',
+      color: 'text-purple-500'
     },
     {
       icon: Award,
       title: 'Gamified Experience',
-      description: 'Earn points, unlock achievements, and track your learning progress.'
+      description: 'Earn points, unlock achievements, and track your learning progress.',
+      color: 'text-yellow-500'
+    },
+    {
+      icon: Shield,
+      title: 'Secure Development',
+      description: 'Learn security best practices and common smart contract vulnerabilities.',
+      color: 'text-red-500'
+    },
+    {
+      icon: Rocket,
+      title: 'Fast & Scalable',
+      description: 'Build on Algorand\'s fast, secure, and carbon-neutral blockchain.',
+      color: 'text-primary-500'
     }
   ];
 
