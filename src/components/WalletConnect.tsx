@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Wallet, LogOut, ChevronDown } from 'lucide-react';
+import { Wallet, LogOut, ChevronDown, Copy, CheckCircle } from 'lucide-react';
 import { useWallet } from '../hooks/useWallet';
 
 const WalletConnect = () => {
@@ -13,9 +13,18 @@ const WalletConnect = () => {
     balance 
   } = useWallet();
   const [showDropdown, setShowDropdown] = React.useState(false);
+  const [copied, setCopied] = React.useState(false);
 
   const truncateAddress = (addr: string) => {
     return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+  };
+
+  const copyToClipboard = async () => {
+    if (address) {
+      await navigator.clipboard.writeText(address);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   if (isConnected && address) {
