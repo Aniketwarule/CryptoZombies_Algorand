@@ -10,6 +10,34 @@ export const ALGORAND_CONFIG = {
   indexerPort: ''
 };
 
+// Network configuration constants
+export const NETWORK_CONSTANTS = {
+  MIN_FEE: 1000,
+  MIN_BALANCE: 100000,
+  TESTNET_GENESIS_ID: 'testnet-v1.0',
+  TESTNET_GENESIS_HASH: 'SGO1GKSzyE7IEPItTxCByw9x8FmnrCDexi9/cOUJOiI='
+};
+
+// Validate Algorand address format
+export const isValidAlgorandAddress = (address: string): boolean => {
+  try {
+    return algosdk.isValidAddress(address);
+  } catch {
+    return false;
+  }
+};
+
+// Format microAlgos to Algos for display
+export const formatAlgoAmount = (microAlgos: number, decimals = 6): string => {
+  const algos = algosdk.microAlgosToAlgos(microAlgos);
+  return algos.toFixed(decimals);
+};
+
+// Convert Algos to microAlgos
+export const convertAlgosToMicroAlgos = (algos: number): number => {
+  return algosdk.algosToMicroalgos(algos);
+};
+
 // Create Algod client
 export const createAlgodClient = () => {
   return new algosdk.Algodv2(
