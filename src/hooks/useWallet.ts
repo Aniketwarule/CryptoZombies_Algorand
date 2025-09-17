@@ -6,6 +6,7 @@ interface WalletState {
   address: string | null;
   isConnecting: boolean;
   balance: number;
+  error: string | null;
 }
 
 export const useWallet = () => {
@@ -13,7 +14,8 @@ export const useWallet = () => {
     isConnected: false,
     address: null,
     isConnecting: false,
-    balance: 0
+    balance: 0,
+    error: null
   });
 
   // Mock Algorand client for TestNet
@@ -42,7 +44,8 @@ export const useWallet = () => {
         isConnected: true,
         address,
         isConnecting: false,
-        balance: parseFloat(balance.toFixed(2))
+        balance: parseFloat(balance.toFixed(2)),
+        error: null
       });
 
       // Store in localStorage for persistence
@@ -55,7 +58,8 @@ export const useWallet = () => {
       console.error('Failed to connect wallet:', error);
       setWalletState(prev => ({ 
         ...prev, 
-        isConnecting: false 
+        isConnecting: false,
+        error: 'Failed to connect wallet. Please try again.'
       }));
     }
   };
@@ -65,7 +69,8 @@ export const useWallet = () => {
       isConnected: false,
       address: null,
       isConnecting: false,
-      balance: 0
+      balance: 0,
+      error: null
     });
     localStorage.removeItem('algozombies-wallet');
   };
