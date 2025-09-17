@@ -1,12 +1,27 @@
 // Footer component with social links and navigation
 import React from 'react';
-import { Github, Twitter, ExternalLink } from 'lucide-react';
+import { Github, Twitter, ExternalLink, Heart, Code } from 'lucide-react';
+import { APP_CONFIG } from '../constants';
 
 const Footer = () => {
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer className="bg-dark-800 border-t border-dark-700">
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="md:col-span-2">
+            <div className="flex items-center space-x-2 mb-4">
+              <Code className="h-6 w-6 text-primary-500" />
+              <span className="text-xl font-bold text-white">{APP_CONFIG.name}</span>
+            </div>
+            <p className="text-gray-400 mb-4 max-w-md">
+              {APP_CONFIG.description}
+            </p>
+            <p className="text-sm text-gray-500 flex items-center">
+              Made with <Heart className="h-4 w-4 mx-1 text-red-500" /> for the Algorand community
+            </p>
+          </div>
           <div>
             <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
               Learn
