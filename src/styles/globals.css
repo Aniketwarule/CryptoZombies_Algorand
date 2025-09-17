@@ -10,6 +10,12 @@
 
   body {
     @apply bg-dark-900 text-white font-sans antialiased;
+    line-height: 1.7;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold;
+    line-height: 1.3;
   }
   
   /* Custom scrollbar */
@@ -53,7 +59,21 @@
   }
   
   .card {
-    @apply bg-dark-800 rounded-xl border border-dark-700 p-6;
+    @apply bg-dark-800 rounded-xl border border-dark-700 p-6 
+           shadow-lg hover:shadow-xl transition-shadow duration-300;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary-500 to-purple-500 
+           bg-clip-text text-transparent;
+  }
+
+  .glass-effect {
+    @apply backdrop-blur-md bg-dark-800/50 border border-dark-700/50;
+  }
+
+  .loading-pulse {
+    @apply animate-pulse bg-dark-700 rounded;
   }
   
   .card-hover {
