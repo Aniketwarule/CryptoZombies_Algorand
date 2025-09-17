@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------- Base Layer ---------------- */
+@layer base {
+  * {
+    @apply border-dark-700;
+  }
+
+  body {
+    @apply bg-dark-900 text-white font-sans;
+  }
+  
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-dark-800;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-dark-600 rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-dark-500;
+  }
+
+  /* Monaco Editor dark theme adjustments */
+  .monaco-editor {
+    @apply rounded-lg;
+  }
+  
+  .monaco-editor .margin {
+    @apply bg-dark-800;
+  }
+}
+
+/* ---------------- Components Layer ---------------- */
+@layer components {
+  .btn-primary {
+    @apply bg-primary-500 hover:bg-primary-600 text-white font-medium 
+           py-2 px-4 rounded-lg transition-colors duration-200;
+  }
+  
+  .btn-secondary {
+    @apply bg-dark-700 hover:bg-dark-600 text-white font-medium 
+           py-2 px-4 rounded-lg transition-colors duration-200;
+  }
+  
+  .card {
+    @apply bg-dark-800 rounded-xl border border-dark-700 p-6;
+  }
+  
+  .card-hover {
+    @apply card hover:border-primary-500/50 hover:shadow-lg 
+           hover:shadow-primary-500/10 transition-all duration-300;
+  }
+}
