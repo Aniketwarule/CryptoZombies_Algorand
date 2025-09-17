@@ -1,12 +1,18 @@
+// AlgoZombies - Educational platform for Algorand development
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Zap, BookOpen, Home, Info } from 'lucide-react';
 import WalletConnect from './WalletConnect';
 
+/**
+ * Navigation bar component for the AlgoZombies application
+ * Features responsive design with wallet connection integration
+ */
 const Navbar = () => {
   const location = useLocation();
 
+  // Navigation menu items configuration
   const navItems = [
     { path: '/', icon: Home, label: 'Dashboard' },
     { path: '/lessons', icon: BookOpen, label: 'Lessons' },
@@ -66,7 +72,7 @@ const Navbar = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 flex items-center space-x-2 ${
+                className={`px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 flex items-center space-x-2 ${
                   isActive
                     ? 'bg-primary-500 text-white'
                     : 'text-gray-300 hover:bg-dark-700 hover:text-white'
