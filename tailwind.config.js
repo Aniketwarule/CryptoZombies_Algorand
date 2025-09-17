@@ -9,15 +9,19 @@ export default {
         primary: {
           50: '#ecfdf5',
           100: '#d1fae5',
+          400: '#34d399',
           500: '#10b981',
           600: '#059669',
           700: '#047857',
+          800: '#065f46',
           900: '#064e3b',
         },
         purple: {
+          400: '#a78bfa',
           500: '#8b5cf6',
           600: '#7c3aed',
           700: '#6d28d9',
+          800: '#5b21b6',
         },
         dark: {
           900: '#0f172a',
@@ -25,6 +29,7 @@ export default {
           700: '#334155',
           600: '#475569',
           500: '#64748b',
+          400: '#94a3b8',
         },
 
         /* === shadcn/ui tokens === */
@@ -72,7 +77,9 @@ export default {
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
         'slide-up': 'slideUp 0.3s ease-out',
+        'slide-down': 'slideDown 0.3s ease-out',
         'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+        'bounce-subtle': 'bounceSubtle 1s ease-in-out infinite',
       },
 
       keyframes: {
@@ -84,9 +91,17 @@ export default {
           '0%': { transform: 'translateY(10px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
         },
+        slideDown: {
+          '0%': { transform: 'translateY(-10px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
         pulseGlow: {
           '0%, 100%': { boxShadow: '0 0 20px rgba(16, 185, 129, 0.3)' },
           '50%': { boxShadow: '0 0 40px rgba(16, 185, 129, 0.6)' },
+        },
+        bounceSubtle: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-5px)' },
         },
       },
     },
