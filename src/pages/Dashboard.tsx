@@ -1,14 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { BookOpen, Trophy, Target, ArrowRight, Zap, Code, Users, Globe } from 'lucide-react';
+import { BookOpen, Trophy, Target, ArrowRight, Zap, Code, Users, Globe, Clock } from 'lucide-react';
 import { useProgress } from '../context/ProgressContext';
 import ProgressTracker from '../components/ProgressTracker';
 
 const Dashboard = () => {
-  const { progress, getTotalProgress } = useProgress();
+  const { progress, getTotalProgress, getCompletedCount } = useProgress();
   const totalProgress = getTotalProgress();
-  const completedLessons = Object.values(progress).filter(p => p.completed).length;
+  const completedLessons = getCompletedCount();
+  
+  const calculateAverageScore = () => {
+    const scores = Object.values(progress).filter(p => p.completed).map(p => p.score);
+    return scores.length > 0 ? Math.round(scores.reduce((acc, score) => acc + score, 0) / scores.length) : 0;
+  };
   
   const stats = [
     {
@@ -20,10 +25,7 @@ const Dashboard = () => {
     {
       icon: Trophy,
       label: 'Average Score',
-      value: Math.round(
-        Object.values(progress).reduce((acc, p) => acc + p.score, 0) / 
-        Math.max(Object.values(progress).length, 1)
-      ),
+      value: calculateAverageScore(),
       color: 'text-yellow-500'
     },
     {
@@ -31,6 +33,12 @@ const Dashboard = () => {
       label: 'Progress',
       value: `${Math.round(totalProgress * 100)}%`,
       color: 'text-purple-500'
+    },
+    {
+      icon: Clock,
+      label: 'Study Time',
+      value: `${completedLessons * 15}min`,
+      color: 'text-blue-500'
     }
   ];
 
