@@ -9,7 +9,9 @@ interface LessonProgress {
 interface ProgressContextType {
   progress: Record<string, LessonProgress>;
   completeLesson: (lessonId: string, score: number) => void;
+  resetProgress: () => void;
   getTotalProgress: () => number;
+  getCompletedCount: () => number;
 }
 
 const ProgressContext = createContext<ProgressContextType | undefined>(undefined);
@@ -64,10 +66,21 @@ export const ProgressProvider: React.FC<ProgressProviderProps> = ({ children }) 
     return completedLessons / totalLessons;
   };
 
+  const getCompletedCount = () => {
+    return Object.values(progress).filter(p => p.completed).length;
+  };
+
+  const resetProgress = () => {
+    setProgress({});
+    localStorage.removeItem(STORAGE_KEY);
+  };
+
   const value = {
     progress,
     completeLesson,
-    getTotalProgress
+    resetProgress,
+    getTotalProgress,
+    getCompletedCount
   };
 
   return (
