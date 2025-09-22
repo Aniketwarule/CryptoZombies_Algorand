@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import MonacoEditor from '@monaco-editor/react';
 import { motion } from 'framer-motion';
-import { Play, RotateCcw, CheckCircle } from 'lucide-react';
+import { Play, RotateCcw, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 
 interface EditorProps {
   code: string;
@@ -15,6 +15,8 @@ interface EditorProps {
     score?: number;
   };
   language?: string;
+  placeholder?: string;
+  readOnly?: boolean;
 }
 
 const Editor: React.FC<EditorProps> = ({
@@ -24,9 +26,11 @@ const Editor: React.FC<EditorProps> = ({
   onReset,
   isValidating,
   validationResult,
-  language = 'python'
+  language = 'python',
+  placeholder = '# Write your PyTeal code here...',
+  readOnly = false
 }) => {
-  const editorOptions = {
+  const editorOptions = useMemo(() => ({
     minimap: { enabled: false },
     fontSize: 14,
     theme: 'vs-dark',
@@ -38,6 +42,14 @@ const Editor: React.FC<EditorProps> = ({
     cursorStyle: 'line' as const,
     folding: true,
     showFoldingControls: 'mouseover' as const,
+    readOnly,
+    contextmenu: !readOnly,
+    renderLineHighlight: 'all' as const,
+  }), [readOnly]);
+
+  const handleEditorChange = useCallback((value: string | undefined) => {
+    onChange(value || '');
+  }, [onChange]);
   };
 
   return (
