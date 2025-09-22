@@ -1,13 +1,24 @@
 {
   "name": "algozombies-frontend",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
+  "description": "Learn Algorand smart contracts through interactive coding challenges",
+  "author": "AlgoZombies Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Aniketwarule/CryptoZombies_Algorand.git"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "lint:fix": "eslint . --fix",
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist node_modules/.vite",
+    "start": "npm run dev"
   },
   "dependencies": {
     "@blockshake/defly-connect": "^1.1.6",
