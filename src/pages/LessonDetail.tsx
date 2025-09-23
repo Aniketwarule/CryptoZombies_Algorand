@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, BookOpen, Target, Lightbulb } from 'lucide-react';
+import { ArrowLeft, BookOpen, Target, Lightbulb, CheckCircle, Clock, Trophy } from 'lucide-react';
 import Editor from '../components/Editor';
 import ProgressTracker from '../components/ProgressTracker';
 import { useProgress } from '../context/ProgressContext';
@@ -9,15 +9,18 @@ import { useProgress } from '../context/ProgressContext';
 const LessonDetail = () => {
   const { lessonId } = useParams<{ lessonId: string }>();
   const navigate = useNavigate();
-  const { completeLesson } = useProgress();
+  const { completeLesson, progress } = useProgress();
   
   const [code, setCode] = useState('');
   const [isValidating, setIsValidating] = useState(false);
+  const [showHints, setShowHints] = useState(false);
   const [validationResult, setValidationResult] = useState<{
     isValid: boolean;
     message: string;
     score?: number;
   } | undefined>();
+
+  const currentProgress = lessonId ? progress[lessonId] : undefined;
 
   // Mock lesson data
   const lessons = {
