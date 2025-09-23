@@ -1,15 +1,29 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle, Circle, Trophy, Star } from 'lucide-react';
+import { CheckCircle, Circle, Trophy, Star, Clock, Target } from 'lucide-react';
 import { useProgress } from '../context/ProgressContext';
 
 interface ProgressTrackerProps {
   lessonId?: string;
+  showStats?: boolean;
+  compact?: boolean;
 }
 
-const ProgressTracker: React.FC<ProgressTrackerProps> = ({ lessonId }) => {
-  const { progress, getTotalProgress } = useProgress();
+const ProgressTracker: React.FC<ProgressTrackerProps> = ({ 
+  lessonId, 
+  showStats = false,
+  compact = false 
+}) => {
+  const { progress, getTotalProgress, getCompletedCount } = useProgress();
   const totalProgress = getTotalProgress();
+  const completedLessons = getCompletedCount();
+
+  const calculateAverageScore = () => {
+    const scores = Object.values(progress)
+      .filter(p => p.completed)
+      .map(p => p.score);
+    return scores.length > 0 ? Math.round(scores.reduce((acc, score) => acc + score, 0) / scores.length) : 0;
+  };
 
   if (lessonId) {
     const lessonProgress = progress[lessonId] || { completed: false, score: 0 };
