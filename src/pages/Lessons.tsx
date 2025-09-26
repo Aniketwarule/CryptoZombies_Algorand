@@ -68,6 +68,33 @@ const Lessons = () => {
       duration: '120 min',
       unlocked: progress['zombie-battles']?.completed || false,
       topics: ['Atomic Transfers', 'Escrow Contracts', 'Price Oracles']
+    },
+    {
+      id: 'advanced-pyteal-ops',
+      title: 'Advanced PyTeal Operations & Optimization',
+      description: 'Dive deep into complex PyTeal features, opcodes, and contract optimization.',
+      difficulty: 'Expert',
+      duration: '150 min',
+      unlocked: progress['marketplace-integration']?.completed || false,
+      topics: ['ABI Standard', 'Global State Optimization', 'Inner Transactions', 'Box Storage']
+    },
+    {
+      id: 'defi-swap-contract',
+      title: 'Building a DeFi Swap Contract',
+      description: 'Develop a simplified Automated Market Maker (AMM) style contract using Algorand Standard Assets.',
+      difficulty: 'Expert',
+      duration: '180 min',
+      unlocked: progress['advanced-pyteal-ops']?.completed || false,
+      topics: ['Liquidity Pools', 'Exchange Logic', 'Slippage Control', 'Decentralized Finance']
+    },
+    {
+      id: 'smart-contract-security',
+      title: 'Algorand Smart Contract Security',
+      description: 'Learn best practices for auditing and securing your PyTeal smart contracts against common exploits.',
+      difficulty: 'Expert',
+      duration: '100 min',
+      unlocked: progress['defi-swap-contract']?.completed || false,
+      topics: ['Re-entrancy Prevention', 'Logic Auditing', 'State Management Pitfalls', 'Security Best Practices']
     }
   ];
 
