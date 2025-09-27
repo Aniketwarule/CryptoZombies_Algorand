@@ -3,10 +3,13 @@ import React, { Suspense, ErrorBoundary } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import { NotificationProvider } from './components/NotificationSystem';
+import { PageLoading } from './components/Loading';
 import Dashboard from './pages/Dashboard';
 import Lessons from './pages/Lessons';
 import LessonDetail from './pages/LessonDetail';
 import About from './pages/About';
+import Settings from './pages/Settings';
 import { ProgressProvider } from './context/ProgressContext';
 
 // Error boundary component
@@ -58,23 +61,26 @@ const LoadingSpinner = () => (
 function App() {
   return (
     <AppErrorBoundary>
-      <ProgressProvider>
-        <div className="min-h-screen flex flex-col bg-dark-900">
-          <Navbar />
-          <main className="flex-1">
-            <Suspense fallback={<LoadingSpinner />}>
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/lessons" element={<Lessons />} />
-                <Route path="/lessons/:lessonId" element={<LessonDetail />} />
-                <Route path="/about" element={<About />} />
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </Routes>
-            </Suspense>
-          </main>
-          <Footer />
-        </div>
-      </ProgressProvider>
+      <NotificationProvider>
+        <ProgressProvider>
+          <div className="min-h-screen flex flex-col bg-dark-900">
+            <Navbar />
+            <main className="flex-1">
+              <Suspense fallback={<PageLoading message="Loading AlgoZombies..." />}>
+                <Routes>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/lessons" element={<Lessons />} />
+                  <Route path="/lessons/:lessonId" element={<LessonDetail />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+              </Suspense>
+            </main>
+            <Footer />
+          </div>
+        </ProgressProvider>
+      </NotificationProvider>
     </AppErrorBoundary>
   );
 }
