@@ -45,6 +45,13 @@ const Editor: React.FC<EditorProps> = ({
     readOnly,
     contextmenu: !readOnly,
     renderLineHighlight: 'all' as const,
+    tabSize: 2,
+    insertSpaces: true,
+    bracketPairColorization: { enabled: true },
+    suggest: {
+      showKeywords: true,
+      showSnippets: true,
+    },
   }), [readOnly]);
 
   const handleEditorChange = useCallback((value: string | undefined) => {
