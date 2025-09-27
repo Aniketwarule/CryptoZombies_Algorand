@@ -6,19 +6,72 @@ Learn Algorand smart contract development through interactive coding challenges 
 
 ## 🚀 Features
 
-- **Interactive Learning**: Learn PyTeal through hands-on coding exercises
-- **Gamified Experience**: Earn points and track your progress
-- **Real Blockchain Integration**: Deploy and test on Algorand TestNet
-- **Wallet Connection**: Connect with Pera, Defly, and MyAlgo wallets
-- **Progressive Curriculum**: From basics to advanced smart contract development
+# 🧟‍♂️ AlgoZombies
+
+Learn Algorand smart contract development through interactive coding challenges inspired by CryptoZombies.
+
+![AlgoZombies Banner](https://via.placeholder.com/800x200/10b981/ffffff?text=AlgoZombies)
+
+## 🚀 Features
+
+### 📚 Interactive Learning
+- **Progressive Lessons**: Step-by-step tutorials from basics to advanced concepts
+- **Code Editor**: Built-in Monaco editor with syntax highlighting for PyTeal and TEAL
+- **Real-time Feedback**: Instant validation and hints for your code
+- **Progress Tracking**: Monitor your learning journey with detailed analytics
+
+### 🔗 Blockchain Integration
+- **Wallet Connect**: Seamless integration with popular Algorand wallets (Pera, MyAlgo, Defly)
+- **Live Deployment**: Test your smart contracts on Algorand TestNet
+- **Transaction History**: Track your deployed contracts and transactions
+
+### 🎮 Gamification
+- **XP System**: Earn experience points for completing lessons
+- **Achievements**: Unlock badges and milestones as you progress
+- **Streak Counter**: Maintain your learning momentum
+- **Leaderboards**: Compete with other developers
+
+### 🛠️ Developer Tools
+- **Multi-language Support**: Learn both PyTeal (Python) and TEAL (Assembly)
+- **Code Templates**: Pre-built templates for common patterns
+- **Debugging Tools**: Advanced debugging and error reporting
+- **Export Functions**: Save and share your completed contracts
+
+### 🔐 Security & Privacy
+- **Secure Storage**: Encrypted local storage for sensitive data
+- **Input Validation**: Comprehensive validation system
+- **Rate Limiting**: Protection against abuse
+- **Privacy First**: Minimal data collection
+
+### 🎨 User Experience
+- **Theme System**: Dark, light, and cyberpunk themes
+- **Responsive Design**: Perfect across all devices
+- **Notification System**: Toast notifications for feedback
+- **Loading States**: Smooth animations and skeleton screens
+- **Accessibility**: Full keyboard and screen reader support
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React 18, TypeScript, Tailwind CSS
-- **Blockchain**: Algorand SDK, PyTeal
-- **UI/UX**: Framer Motion, Lucide Icons
-- **Code Editor**: Monaco Editor
-- **State Management**: React Context + Custom Hooks
+### Frontend Technologies
+- **React 18.3** with TypeScript for type safety
+- **Vite** for lightning-fast development
+- **Tailwind CSS** for responsive styling
+- **Framer Motion** for smooth animations
+- **Monaco Editor** for professional code editing
+- **React Router** for client-side routing
+
+### Algorand Integration
+- **Algorand SDK** for blockchain interactions
+- **Wallet Connectors**: Pera, MyAlgo, Defly Connect
+- **PyTeal Support**: Full Python integration
+- **TEAL Assembly**: Direct smart contract development
+
+### Development Tools
+- **ESLint** with custom configuration
+- **TypeScript** for enhanced DX
+- **Zustand** for state management
+- **Zod** for schema validation
+- **CryptoJS** for encryption
 
 ## 🏁 Quick Start
 
