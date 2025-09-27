@@ -1,7 +1,20 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Wallet, LogOut, ChevronDown, Copy, CheckCircle } from 'lucide-react';
+import { 
+  Wallet, LogOut, ChevronDown, Copy, CheckCircle, 
+  ExternalLink, Shield, Activity, TrendingUp, AlertCircle 
+} from 'lucide-react';
 import { useWallet } from '../hooks/useWallet';
+import { useNotificationHelpers } from './NotificationSystem';
+
+interface WalletProvider {
+  id: string;
+  name: string;
+  icon: string;
+  description: string;
+  isInstalled?: boolean;
+  downloadUrl?: string;
+}
 
 const WalletConnect = () => {
   const { 
@@ -12,8 +25,38 @@ const WalletConnect = () => {
     disconnect, 
     balance 
   } = useWallet();
+  
+  const { showSuccess, showError } = useNotificationHelpers();
   const [showDropdown, setShowDropdown] = React.useState(false);
+  const [showProviders, setShowProviders] = React.useState(false);
   const [copied, setCopied] = React.useState(false);
+  const [recentTransactions, setRecentTransactions] = React.useState<any[]>([]);
+
+  // Mock wallet providers
+  const walletProviders: WalletProvider[] = [
+    {
+      id: 'pera',
+      name: 'Pera Wallet',
+      icon: '🟢',
+      description: 'Official Algorand wallet',
+      isInstalled: true
+    },
+    {
+      id: 'myalgo',
+      name: 'MyAlgo',
+      icon: '🔵',
+      description: 'Web-based Algorand wallet',
+      isInstalled: true
+    },
+    {
+      id: 'defly',
+      name: 'Defly',
+      icon: '🟣',
+      description: 'Mobile-first Algorand wallet',
+      isInstalled: false,
+      downloadUrl: 'https://defly.app'
+    }
+  ];
 
   const truncateAddress = (addr: string) => {
     return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
@@ -21,11 +64,50 @@ const WalletConnect = () => {
 
   const copyToClipboard = async () => {
     if (address) {
-      await navigator.clipboard.writeText(address);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      try {
+        await navigator.clipboard.writeText(address);
+        setCopied(true);
+        showSuccess('Address copied!', 'Wallet address copied to clipboard');
+        setTimeout(() => setCopied(false), 2000);
+      } catch (error) {
+        showError('Copy failed', 'Could not copy address to clipboard');
+      }
     }
   };
+
+  const handleConnect = async (providerId: string) => {
+    try {
+      await connect(providerId);
+      showSuccess('Wallet connected!', `Successfully connected to ${providerId}`);
+      setShowProviders(false);
+    } catch (error) {
+      showError('Connection failed', `Failed to connect to ${providerId}`);
+    }
+  };
+
+  const handleDisconnect = async () => {
+    try {
+      await disconnect();
+      showSuccess('Wallet disconnected', 'Successfully disconnected wallet');
+      setShowDropdown(false);
+    } catch (error) {
+      showError('Disconnect failed', 'Failed to disconnect wallet');
+    }
+  };
+
+  const formatBalance = (bal: number) => {
+    return new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 6
+    }).format(bal);
+  };
+
+  // Mock recent transactions
+  const getRecentTransactions = () => [
+    { id: 1, type: 'receive', amount: 5.25, hash: 'ABC123...', timestamp: Date.now() - 3600000 },
+    { id: 2, type: 'send', amount: -2.1, hash: 'DEF456...', timestamp: Date.now() - 7200000 },
+    { id: 3, type: 'contract', amount: 0, hash: 'GHI789...', timestamp: Date.now() - 10800000 },
+  ];
 
   if (isConnected && address) {
     return (
