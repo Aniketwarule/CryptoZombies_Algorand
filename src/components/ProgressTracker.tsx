@@ -1,20 +1,39 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { CheckCircle, Circle, Trophy, Star, Clock, Target } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  CheckCircle, Circle, Trophy, Star, Clock, Target, TrendingUp, 
+  Award, Zap, Calendar, BarChart3, Activity 
+} from 'lucide-react';
 import { useProgress } from '../context/ProgressContext';
 
 interface ProgressTrackerProps {
   lessonId?: string;
   showStats?: boolean;
   compact?: boolean;
+  showAnimation?: boolean;
+  showStreak?: boolean;
+}
+
+interface Achievement {
+  id: string;
+  title: string;
+  description: string;
+  icon: React.ComponentType;
+  unlocked: boolean;
+  progress?: number;
+  maxProgress?: number;
 }
 
 const ProgressTracker: React.FC<ProgressTrackerProps> = ({ 
   lessonId, 
   showStats = false,
-  compact = false 
+  compact = false,
+  showAnimation = true,
+  showStreak = true
 }) => {
   const { progress, getTotalProgress, getCompletedCount } = useProgress();
+  const [showAchievements, setShowAchievements] = useState(false);
+  const [animatedProgress, setAnimatedProgress] = useState(0);
   const totalProgress = getTotalProgress();
   const completedLessons = getCompletedCount();
 
@@ -24,6 +43,74 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = ({
       .map(p => p.score);
     return scores.length > 0 ? Math.round(scores.reduce((acc, score) => acc + score, 0) / scores.length) : 0;
   };
+
+  const calculateStreak = () => {
+    // Mock streak calculation - in real app would be based on dates
+    return Math.floor(Math.random() * 15) + 1;
+  };
+
+  const calculateXP = () => {
+    return Object.values(progress)
+      .filter(p => p.completed)
+      .reduce((total, p) => total + p.score, 0);
+  };
+
+  const getAchievements = (): Achievement[] => {
+    const currentXP = calculateXP();
+    const streak = calculateStreak();
+    
+    return [
+      {
+        id: 'first_lesson',
+        title: 'First Steps',
+        description: 'Complete your first lesson',
+        icon: Star,
+        unlocked: completedLessons > 0
+      },
+      {
+        id: 'streak_master',
+        title: 'Streak Master',
+        description: 'Maintain a 7-day learning streak',
+        icon: Zap,
+        unlocked: streak >= 7,
+        progress: Math.min(streak, 7),
+        maxProgress: 7
+      },
+      {
+        id: 'high_scorer',
+        title: 'High Scorer',
+        description: 'Achieve an average score of 90+',
+        icon: Trophy,
+        unlocked: calculateAverageScore() >= 90,
+        progress: calculateAverageScore(),
+        maxProgress: 100
+      },
+      {
+        id: 'dedicated_learner',
+        title: 'Dedicated Learner',
+        description: 'Complete 10 lessons',
+        icon: Target,
+        unlocked: completedLessons >= 10,
+        progress: completedLessons,
+        maxProgress: 10
+      }
+    ];
+  };
+
+  const getProgressColor = (percentage: number) => {
+    if (percentage >= 80) return 'from-green-400 to-green-600';
+    if (percentage >= 60) return 'from-blue-400 to-blue-600';
+    if (percentage >= 40) return 'from-yellow-400 to-yellow-600';
+    return 'from-red-400 to-red-600';
+  };
+
+  // Animate progress on mount
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setAnimatedProgress(totalProgress);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [totalProgress]);
 
   if (lessonId) {
     const lessonProgress = progress[lessonId] || { completed: false, score: 0 };
