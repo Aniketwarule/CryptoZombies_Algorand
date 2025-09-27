@@ -58,6 +58,38 @@ const Footer = () => {
                 <span>PyTeal Documentation</span>
                 <ExternalLink className="h-4 w-4" />
               </a>
+              <a
+                href="https://github.com/algorand/smart-contracts"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-base text-gray-300 hover:text-white transition-colors flex items-center space-x-2"
+              >
+                <span>Smart Contract Examples</span>
+                <ExternalLink className="h-4 w-4" />
+              </a>
+            </div>
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
+              Community
+            </h3>
+            <div className="mt-4 space-y-4">
+              <a
+                href="https://discord.gg/algorand"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-base text-gray-300 hover:text-white transition-colors"
+              >
+                Discord
+              </a>
+              <a
+                href="https://forum.algorand.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-base text-gray-300 hover:text-white transition-colors"
+              >
+                Forum
+              </a>
             </div>
           </div>
           <div>
