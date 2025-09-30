@@ -28,6 +28,29 @@ const WalletConnect = () => {
   
   const { showSuccess, showError } = useNotificationHelpers();
   const [showDropdown, setShowDropdown] = React.useState(false);
+  const [connectionStatus, setConnectionStatus] = React.useState<'stable' | 'unstable' | 'slow'>('stable');
+  const [lastSyncTime, setLastSyncTime] = React.useState<Date | null>(null);
+
+  // Monitor connection status
+  React.useEffect(() => {
+    if (!isConnected) return;
+
+    const checkConnectionStatus = () => {
+      // Simulate connection monitoring
+      const statuses: ('stable' | 'unstable' | 'slow')[] = ['stable', 'stable', 'stable', 'slow', 'unstable'];
+      const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+      setConnectionStatus(randomStatus);
+      setLastSyncTime(new Date());
+    };
+
+    // Initial check
+    checkConnectionStatus();
+    
+    // Check every 10 seconds
+    const interval = setInterval(checkConnectionStatus, 10000);
+    
+    return () => clearInterval(interval);
+  }, [isConnected]);
   const [showProviders, setShowProviders] = React.useState(false);
   const [copied, setCopied] = React.useState(false);
   const [recentTransactions, setRecentTransactions] = React.useState<any[]>([]);
@@ -132,6 +155,26 @@ const WalletConnect = () => {
               className="absolute right-0 mt-2 w-56 bg-dark-800 rounded-lg shadow-lg border border-dark-700 z-50"
             >
               <div className="p-4 border-b border-dark-700">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-sm text-gray-400">Connection Status</p>
+                  <div className="flex items-center space-x-2">
+                    <div className={`w-2 h-2 rounded-full ${
+                      connectionStatus === 'stable' ? 'bg-green-500' :
+                      connectionStatus === 'slow' ? 'bg-yellow-500' : 'bg-red-500'
+                    }`} />
+                    <span className={`text-xs capitalize ${
+                      connectionStatus === 'stable' ? 'text-green-400' :
+                      connectionStatus === 'slow' ? 'text-yellow-400' : 'text-red-400'
+                    }`}>
+                      {connectionStatus}
+                    </span>
+                  </div>
+                </div>
+                {lastSyncTime && (
+                  <p className="text-xs text-gray-500 mb-3">
+                    Last sync: {lastSyncTime.toLocaleTimeString()}
+                  </p>
+                )}
                 <p className="text-sm text-gray-400">Connected Address</p>
                 <p className="font-mono text-sm">{truncateAddress(address)}</p>
                 <p className="text-sm text-gray-400 mt-2">Balance</p>
