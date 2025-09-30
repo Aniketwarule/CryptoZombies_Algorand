@@ -1,5 +1,5 @@
 // AlgoZombies - Educational platform for Algorand development
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Zap, BookOpen, Home, Info, User, Settings, LogOut, ChevronDown, Trophy, Heart } from 'lucide-react';
@@ -12,7 +12,7 @@ import { useWallet } from '../hooks/useWallet';
  */
 const Navbar = () => {
   const location = useLocation();
-  const { isConnected, account, disconnect } = useWallet();
+  const { isConnected, disconnect } = useWallet();
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
 
