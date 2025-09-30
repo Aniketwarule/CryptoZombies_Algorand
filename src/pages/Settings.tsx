@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Settings as SettingsIcon, Moon, Sun, Palette, Bell, Lock, Download, Upload } from 'lucide-react';
+import { Settings as SettingsIcon, Moon, Sun, Palette, Bell, Lock, Download, Upload, User } from 'lucide-react';
 import { storage } from '../utils/storage';
 import { themes, ThemeName } from '../constants/themes';
 import { LoadingSpinner } from '../components/Loading';
+import { InputField, ValidationPatterns } from '../components/InputField';
 
 const Settings = () => {
   const [currentTheme, setCurrentTheme] = useState<ThemeName>('dark');
@@ -12,6 +13,14 @@ const Settings = () => {
   const [language, setLanguage] = useState('en');
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  
+  // Profile form state
+  const [profileData, setProfileData] = useState({
+    username: 'AlgoLearner',
+    email: 'user@example.com',
+    bio: '',
+    walletAddress: '',
+  });
 
   useEffect(() => {
     // Simulate loading settings from storage
@@ -86,6 +95,66 @@ const Settings = () => {
   };
 
   const settingsSections = [
+    {
+      title: 'Profile',
+      icon: User,
+      items: [
+        {
+          label: 'Personal Information',
+          description: 'Update your profile details',
+          control: (
+            <div className="space-y-4 w-full max-w-md">
+              <InputField
+                label="Username"
+                value={profileData.username}
+                onChange={(value) => setProfileData(prev => ({ ...prev, username: value }))}
+                placeholder="Enter your username"
+                required
+                validation={{
+                  minLength: 3,
+                  maxLength: 20,
+                  pattern: /^[a-zA-Z0-9_]+$/,
+                }}
+              />
+              <InputField
+                label="Email"
+                type="email"
+                value={profileData.email}
+                onChange={(value) => setProfileData(prev => ({ ...prev, email: value }))}
+                placeholder="Enter your email"
+                required
+                validation={{
+                  pattern: ValidationPatterns.email,
+                }}
+              />
+              <InputField
+                label="Bio"
+                value={profileData.bio}
+                onChange={(value) => setProfileData(prev => ({ ...prev, bio: value }))}
+                placeholder="Tell us about yourself..."
+                validation={{
+                  maxLength: 200,
+                }}
+              />
+              <InputField
+                label="Wallet Address"
+                value={profileData.walletAddress}
+                onChange={(value) => setProfileData(prev => ({ ...prev, walletAddress: value }))}
+                placeholder="Enter your Algorand wallet address"
+                validation={{
+                  custom: (value: string) => {
+                    if (!value) return null;
+                    if (value.length !== 58) return 'Algorand address must be 58 characters';
+                    if (!/^[A-Z2-7]+$/.test(value)) return 'Invalid address format';
+                    return null;
+                  }
+                }}
+              />
+            </div>
+          ),
+        },
+      ],
+    },
     {
       title: 'Appearance',
       icon: Palette,
