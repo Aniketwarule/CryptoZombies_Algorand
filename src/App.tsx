@@ -1,26 +1,23 @@
 // Main App component - routing and layout setup
-import React, { Suspense } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ErrorBoundary from './components/ErrorBoundary';
 import { NotificationProvider } from './components/NotificationSystem';
 import { PageLoading } from './components/Loading';
-import Dashboard from './pages/Dashboard';
-import Lessons from './pages/Lessons';
-import LessonDetail from './pages/LessonDetail';
-import About from './pages/About';
-import Settings from './pages/Settings';
 import { ProgressProvider } from './context/ProgressContext';
 
+// Lazy load pages for better performance
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Lessons = lazy(() => import('./pages/Lessons'));
+const LessonDetail = lazy(() => import('./pages/LessonDetail'));
+const About = lazy(() => import('./pages/About'));
+const Settings = lazy(() => import('./pages/Settings'));
 
 
-// Loading component
-const LoadingSpinner = () => (
-  <div className="min-h-screen flex items-center justify-center bg-dark-900">
-    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-500"></div>
-  </div>
-);
+
+
 
 function App() {
   return (

@@ -1,8 +1,11 @@
-import React from 'react';
-import MonacoEditor from '@monaco-editor/react';
+import React, { Suspense, lazy } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, RotateCcw, CheckCircle, Copy, Keyboard, X } from 'lucide-react';
 import { useNotificationHelpers } from './NotificationSystem';
+import { LoadingSpinner } from './Loading';
+
+// Lazy load Monaco Editor for better initial page load
+const MonacoEditor = lazy(() => import('@monaco-editor/react'));
 
 interface EditorProps {
   code: string;
@@ -225,14 +228,23 @@ const Editor: React.FC<EditorProps> = ({
       </div>
 
       <div className="flex-1">
-        <MonacoEditor
-          height="400px"
-          language={language}
-          value={code}
-          onChange={(value: string | undefined) => onChange(value || '')}
-          options={editorOptions}
-          theme={theme}
-        />
+        <Suspense fallback={
+          <div className="h-96 flex items-center justify-center bg-dark-900 rounded">
+            <div className="text-center">
+              <LoadingSpinner size="md" />
+              <p className="mt-2 text-gray-400">Loading code editor...</p>
+            </div>
+          </div>
+        }>
+          <MonacoEditor
+            height="400px"
+            language={language}
+            value={code}
+            onChange={(value: string | undefined) => onChange(value || '')}
+            options={editorOptions}
+            theme={theme}
+          />
+        </Suspense>
       </div>
 
       {validationResult && (
