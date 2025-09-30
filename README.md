@@ -1,87 +1,117 @@
 # 🧟‍♂️ AlgoZombies
 
-Learn Algorand smart contract development through interactive coding challenges inspired by CryptoZombies.
+> Learn Algorand smart contract development through interactive coding challenges inspired by CryptoZombies.
 
-![AlgoZombies Banner](https://via.placeholder.com/800x200/10b981/ffffff?text=AlgoZombies)
+![AlgoZombies Architecture](https://via.placeholder.com/800x400/10b981/ffffff?text=AlgoZombies+Learning+Platform)
 
-## 🚀 Features
+## 📋 Table of Contents
 
-# 🧟‍♂️ AlgoZombies
+- [Overview](#-overview)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Quick Start](#-quick-start)
+- [Learning Path](#-learning-path)
+- [Architecture](#-architecture)
+- [Development](#-development)
+- [Resources](#-resources)
 
-Learn Algorand smart contract development through interactive coding challenges inspired by CryptoZombies.
+## 🎯 Overview
 
-![AlgoZombies Banner](https://via.placeholder.com/800x200/10b981/ffffff?text=AlgoZombies)
+AlgoZombies transforms Algorand smart contract development education into an engaging, gamified experience. Master PyTeal and TEAL through hands-on coding challenges while building your own zombie-themed blockchain game.
 
-## 🚀 Features
+```mermaid
+graph TB
+    A[Student] --> B[Interactive Lessons]
+    B --> C[Code Challenges]
+    C --> D[Smart Contracts]
+    D --> E[Algorand Blockchain]
+    E --> F[Live DApp]
+    F --> A
+```
 
-### 📚 Interactive Learning
-- **Progressive Lessons**: Step-by-step tutorials from basics to advanced concepts
-- **Code Editor**: Built-in Monaco editor with syntax highlighting for PyTeal and TEAL
-- **Real-time Feedback**: Instant validation and hints for your code
-- **Progress Tracking**: Monitor your learning journey with detailed analytics
+## ✨ Features
+
+### 🎓 Learning Experience
+- **Structured Curriculum**: Progressive lessons from fundamentals to advanced concepts
+- **Interactive Code Editor**: Built-in Monaco editor with PyTeal/TEAL support
+- **Instant Validation**: Real-time code checking and intelligent hints
+- **Progress Analytics**: Comprehensive tracking of your learning journey
 
 ### 🔗 Blockchain Integration
-- **Wallet Connect**: Seamless integration with popular Algorand wallets (Pera, MyAlgo, Defly)
-- **Live Deployment**: Test your smart contracts on Algorand TestNet
-- **Transaction History**: Track your deployed contracts and transactions
+```mermaid
+sequenceDiagram
+    Participant U as User
+    Participant A as AlgoZombies
+    Participant W as Wallet
+    Participant B as Blockchain
+    
+    U->>A: Write Smart Contract
+    A->>W: Connect Wallet
+    W->>B: Deploy Contract
+    B->>A: Transaction Confirmation
+    A->>U: Success Feedback
+```
 
-### 🎮 Gamification
-- **XP System**: Earn experience points for completing lessons
-- **Achievements**: Unlock badges and milestones as you progress
-- **Streak Counter**: Maintain your learning momentum
-- **Leaderboards**: Compete with other developers
+### 🏆 Gamification System
+- **Experience Points**: Earn XP for completing challenges
+- **Achievement Badges**: Unlock milestones and collectibles
+- **Learning Streaks**: Maintain consistent progress
+- **Global Leaderboards**: Compete with developers worldwide
 
-### 🛠️ Developer Tools
-- **Multi-language Support**: Learn both PyTeal (Python) and TEAL (Assembly)
-- **Code Templates**: Pre-built templates for common patterns
-- **Debugging Tools**: Advanced debugging and error reporting
-- **Export Functions**: Save and share your completed contracts
+### 🛠️ Development Environment
+- **Dual Language Support**: Learn both PyTeal (Python) and TEAL
+- **Code Templates**: Pre-built patterns for rapid development
+- **Advanced Debugging**: Comprehensive error reporting and analysis
+- **Export Capabilities**: Save and deploy your completed contracts
 
-### 🔐 Security & Privacy
-- **Secure Storage**: Encrypted local storage for sensitive data
-- **Input Validation**: Comprehensive validation system
-- **Rate Limiting**: Protection against abuse
-- **Privacy First**: Minimal data collection
-
-### 🎨 User Experience
-- **Theme System**: Dark, light, and cyberpunk themes
-- **Responsive Design**: Perfect across all devices
-- **Notification System**: Toast notifications for feedback
-- **Loading States**: Smooth animations and skeleton screens
-- **Accessibility**: Full keyboard and screen reader support
+### 🔒 Security & Privacy
+- **Encrypted Storage**: Secure local data management
+- **Input Validation**: Multi-layer security validation
+- **Rate Limiting**: API abuse protection
+- **Privacy Focus**: Minimal data collection practices
 
 ## 🛠️ Tech Stack
 
-### Frontend Technologies
-- **React 18.3** with TypeScript for type safety
-- **Vite** for lightning-fast development
-- **Tailwind CSS** for responsive styling
-- **Framer Motion** for smooth animations
-- **Monaco Editor** for professional code editing
-- **React Router** for client-side routing
+### Frontend Architecture
+```mermaid
+graph LR
+    A[React 18.3] --> B[TypeScript]
+    A --> C[Vite]
+    A --> D[Tailwind CSS]
+    A --> E[Framer Motion]
+    A --> F[Monaco Editor]
+    
+    B --> G[Zustand State]
+    C --> H[React Router]
+    D --> I[Responsive UI]
+```
 
-### Algorand Integration
-- **Algorand SDK** for blockchain interactions
-- **Wallet Connectors**: Pera, MyAlgo, Defly Connect
-- **PyTeal Support**: Full Python integration
-- **TEAL Assembly**: Direct smart contract development
+### Blockchain Integration
+- **Algorand JavaScript SDK** - Blockchain interactions
+- **Wallet Connect** - Pera, MyAlgo, Defly support
+- **PyTeal Compiler** - Python to TEAL compilation
+- **TEAL Interpreter** - Smart contract execution
 
-### Development Tools
-- **ESLint** with custom configuration
-- **TypeScript** for enhanced DX
-- **Zustand** for state management
-- **Zod** for schema validation
-- **CryptoJS** for encryption
+### Development Ecosystem
+```
+Development Tools:
+├── ESLint + Prettier (Code Quality)
+├── TypeScript (Type Safety)
+├── Zod (Schema Validation)
+├── CryptoJS (Encryption)
+└── Jest + Testing Library (Testing)
+```
 
 ## 🏁 Quick Start
 
 ### Prerequisites
 
-- Node.js 18+ 
-- npm or yarn
-- Git
+Ensure you have the following installed:
+- **Node.js** (version 18 or higher)
+- **npm** or **yarn** package manager
+- **Git** for version control
 
-### Installation
+### Installation Steps
 
 ```bash
 # Clone the repository
@@ -93,72 +123,222 @@ cd CryptoZombies_Algorand
 # Install dependencies
 npm install
 
-# Copy environment variables
+# Configure environment
 cp .env.example .env
 
-# Start development server
+# Launch development server
 npm run dev
 ```
 
-### Available Scripts
+### Development Scripts
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run lint` - Run ESLint
-- `npm run lint:fix` - Fix ESLint errors
-- `npm run preview` - Preview production build
-- `npm run type-check` - Run TypeScript checks
+| Command | Purpose |
+|---------|---------|
+| `npm run dev` | Start development server |
+| `npm run build` | Create production build |
+| `npm run lint` | Run code linting |
+| `npm run lint:fix` | Auto-fix linting issues |
+| `npm run preview` | Preview production build |
+| `npm run type-check` | TypeScript validation |
 
 ## 📚 Learning Path
 
-1. **Introduction to Algorand** - Blockchain basics and Algorand overview
-2. **Your First PyTeal Contract** - Write and deploy your first smart contract
-3. **Algorand Standard Assets** - Create and manage tokens
-4. **Zombie Game Mechanics** - Build game logic with smart contracts
-5. **Advanced Patterns** - Security, optimization, and best practices
-6. **DApp Integration** - Connect frontend with blockchain
+### Journey Overview
+```mermaid
+journey
+    title AlgoZombies Learning Journey
+    section Foundation: 25%
+      Learn Algorand Basics: 5: Learner
+      First PyTeal Contract: 5: Developer
+    section Intermediate: 50%
+      Algorand Standard Assets: 4: Builder
+      Zombie Game Mechanics: 4: Creator
+    section Advanced: 75%
+      Smart Contract Patterns: 3: Architect
+      Security Best Practices: 3: Expert
+    section Mastery: 100%
+      DApp Integration: 5: Master
+      Real Project Deployment: 5: Algorand Pro
+```
+
+### Curriculum Details
+
+1. **🚀 Introduction to Algorand**
+   - Blockchain fundamentals
+   - Algorand consensus mechanism
+   - Network architecture overview
+
+2. **🖊️ Your First PyTeal Contract**
+   - PyTeal syntax and structure
+   - Contract deployment workflow
+   - Basic state management
+
+3. **🎫 Algorand Standard Assets (ASA)**
+   - Token creation and management
+   - Asset configuration
+   - Transfer operations
+
+4. **🧩 Zombie Game Mechanics**
+   - Game logic implementation
+   - User interaction patterns
+   - State transitions
+
+5. **⚡ Advanced Development Patterns**
+   - Security considerations
+   - Gas optimization techniques
+   - Best practices
+
+6. **🌐 DApp Integration**
+   - Frontend-blockchain connectivity
+   - Wallet integration
+   - User experience optimization
+
+## 🏗️ Architecture
+
+### System Architecture
+```mermaid
+graph TB
+    subgraph Frontend
+        A[UI Components]
+        B[State Management]
+        C[Code Editor]
+        D[Wallet Connector]
+    end
+    
+    subgraph Blockchain
+        E[Algorand Network]
+        F[Smart Contracts]
+        G[Transaction Pool]
+    end
+    
+    subgraph Backend Services
+        H[Lesson Manager]
+        I[Progress Tracker]
+        J[Code Validator]
+    end
+    
+    A <--> B
+    C <--> J
+    D <--> E
+    E <--> F
+    B <--> I
+    A <--> H
+```
+
+### Project Structure
+```
+src/
+├── components/              # Reusable UI Components
+│   ├── ui/                 # Basic UI elements
+│   ├── editor/             # Code editor components
+│   └── blockchain/         # Blockchain-specific components
+├── pages/                  # Application Pages
+│   ├── lessons/            # Learning modules
+│   ├── challenges/         # Coding challenges
+│   └── profile/            # User profile and progress
+├── context/                # React Context Providers
+│   ├── WalletContext.tsx   # Wallet management
+│   └── LessonContext.tsx   # Lesson state
+├── hooks/                  # Custom React Hooks
+│   ├── useAlgorand.ts      # Blockchain interactions
+│   └── useLessons.ts       # Lesson management
+├── utils/                  # Utility Functions
+│   ├── algorand.ts         # Algorand helpers
+│   └── validation.ts       # Code validation
+├── types/                  # TypeScript Definitions
+│   ├── algorand.ts         # Blockchain types
+│   └── lessons.ts          # Lesson types
+└── constants/              # Application Constants
+    ├── contracts.ts        # Contract templates
+    └── lessons.ts          # Lesson data
+```
 
 ## 🔧 Development
 
-### Project Structure
+### Getting Started with Development
 
-```
-src/
-├── components/          # Reusable UI components
-├── pages/              # Page components
-├── context/            # React Context providers
-├── hooks/              # Custom React hooks
-├── utils/              # Utility functions
-├── types/              # TypeScript type definitions
-├── constants/          # App constants
-└── styles/             # Global styles
-```
+1. **Environment Setup**
+   ```bash
+   # Install dependencies
+   npm install
+   
+   # Set up environment variables
+   cp .env.example .env
+   # Edit .env with your configuration
+   ```
 
-### Contributing
+2. **Development Workflow**
+   ```bash
+   # Start development server
+   npm run dev
+   
+   # Run in browser: http://localhost:3000
+   ```
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+### Contribution Guidelines
+
+We welcome contributions! Please follow these steps:
+
+1. **Fork the Repository**
+   ```bash
+   git fork https://github.com/Aniketwarule/CryptoZombies_Algorand.git
+   ```
+
+2. **Create Feature Branch**
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+3. **Make Your Changes**
+   - Follow code style guidelines
+   - Add tests for new features
+   - Update documentation
+
+4. **Submit Pull Request**
+   - Clear description of changes
+   - Reference related issues
+   - Ensure all tests pass
+
+### Code Quality Standards
+
+- **TypeScript**: Strict type checking enabled
+- **ESLint**: Comprehensive linting rules
+- **Prettier**: Consistent code formatting
+- **Testing**: Component and unit tests
 
 ## 🌐 Algorand Resources
 
-- [Algorand Developer Portal](https://developer.algorand.org/)
-- [PyTeal Documentation](https://pyteal.readthedocs.io/)
-- [Algorand SDK](https://github.com/algorand/js-algorand-sdk)
-- [Algorand TestNet Faucet](https://testnet.algoexplorer.io/dispenser)
+### Essential Links
+- [**Algorand Developer Portal**](https://developer.algorand.org/) - Official documentation
+- [**PyTeal Documentation**](https://pyteal.readthedocs.io/) - PyTeal reference
+- [**Algorand SDK**](https://github.com/algorand/js-algorand-sdk) - JavaScript SDK
+- [**TestNet Faucet**](https://testnet.algoexplorer.io/dispenser) - Get test ALGO tokens
+
+### Learning Materials
+- [Algorand Developer Documentation](https://developer.algorand.org/docs/)
+- [Smart Contract Examples](https://github.com/algorand/pyteal/tree/master/examples)
+- [Community Forum](https://forum.algorand.org/)
+- [Algorand Discord](https://discord.gg/algorand)
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for complete details.
 
 ## 🤝 Acknowledgments
 
-- Inspired by [CryptoZombies](https://cryptozombies.io/)
-- Built for the Algorand developer community
-- Special thanks to all contributors and the Algorand Foundation
+- Inspired by the original [CryptoZombies](https://cryptozombies.io/) platform
+- Built for and supported by the **Algorand developer community**
+- Special thanks to the **Algorand Foundation** for their support
+- Contributions from developers worldwide
 
 ---
 
-**Happy Coding!** 🎉 Start your journey into Algorand development with AlgoZombies!
+<div align="center">
+
+**Ready to begin your Algorand development journey?** 🚀
+
+*Start coding with AlgoZombies today and master blockchain development!*
+
+[Get Started](#-quick-start) | [View Lessons](#-learning-path) | [Contribute](#-development)
+
+</div>
