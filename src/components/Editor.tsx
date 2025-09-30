@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Play, RotateCcw, CheckCircle, Copy, Keyboard, X } from 'lucide-react';
 import { useNotificationHelpers } from './NotificationSystem';
 import { LoadingSpinner } from './Loading';
+import { usePerformance } from '../utils/performance';
 
 // Lazy load Monaco Editor for better initial page load
 const MonacoEditor = lazy(() => import('@monaco-editor/react'));
@@ -36,6 +37,7 @@ const Editor: React.FC<EditorProps> = ({
 }) => {
   const [showShortcuts, setShowShortcuts] = React.useState(false);
   const { showSuccessToast, showErrorToast, showInfoToast } = useNotificationHelpers();
+  const { measureAsync, measureSync } = usePerformance();
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Ctrl/Cmd + S - Format code
@@ -142,26 +144,28 @@ const Editor: React.FC<EditorProps> = ({
           </motion.button>
           <motion.button
             onClick={() => {
-              // Simple Prettier formatting for JS/TS/Python
-              let formatted = code;
-              let success = false;
-              try {
-                if (language === 'javascript' || language === 'typescript') {
-                  // @ts-ignore
-                  formatted = window.prettier.format(code, { parser: language, plugins: window.prettierPlugins });
-                  success = true;
-                } else if (language === 'python') {
-                  // For Python, just basic indentation fix (mock)
-                  formatted = code.split('\n').map(line => line.trim()).join('\n');
-                  success = true;
+              measureSync('code-format', () => {
+                // Simple Prettier formatting for JS/TS/Python
+                let formatted = code;
+                let success = false;
+                try {
+                  if (language === 'javascript' || language === 'typescript') {
+                    // @ts-ignore
+                    formatted = window.prettier.format(code, { parser: language, plugins: window.prettierPlugins });
+                    success = true;
+                  } else if (language === 'python') {
+                    // For Python, just basic indentation fix (mock)
+                    formatted = code.split('\n').map(line => line.trim()).join('\n');
+                    success = true;
+                  }
+                } catch (e) {
+                  showErrorToast('Formatting failed', 'Please check your code syntax');
                 }
-              } catch (e) {
-                showErrorToast('Formatting failed', 'Please check your code syntax');
-              }
-              onChange(formatted);
-              if (success) {
-                showSuccessToast('Code formatted successfully!');
-              }
+                onChange(formatted);
+                if (success) {
+                  showSuccessToast('Code formatted successfully!');
+                }
+              });
             }}
             className="btn-secondary flex items-center space-x-2"
             whileHover={{ scale: 1.02 }}
