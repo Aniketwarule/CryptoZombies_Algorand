@@ -4,6 +4,7 @@ import { Settings as SettingsIcon, Moon, Sun, Palette, Bell, Lock, Download, Upl
 import { storage } from '../utils/storage';
 import { themes, ThemeName } from '../constants/themes';
 import { LoadingSpinner } from '../components/Loading';
+import { ThemeCustomizer } from '../components/ThemeCustomizer';
 import { InputField, ValidationPatterns } from '../components/InputField';
 
 const Settings = () => {
@@ -303,6 +304,13 @@ const Settings = () => {
               </span>
             )}
           </h1>
+
+          {/* Theme Customizer */}
+          <ThemeCustomizer
+            currentTheme={currentTheme}
+            onThemeChange={handleThemeChange}
+            className="mb-8"
+          />
           
           <div className="space-y-8">
             {settingsSections.map((section, sectionIndex) => (

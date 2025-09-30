@@ -97,10 +97,85 @@ export const cyberpunkTheme: Theme = {
   },
 };
 
+export const oceanTheme: Theme = {
+  name: 'Ocean',
+  mode: 'dark',
+  colors: {
+    primary: '#0ea5e9',
+    secondary: '#0284c7',
+    accent: '#06b6d4',
+    background: {
+      primary: '#0c4a6e',
+      secondary: '#075985',
+      tertiary: '#0369a1',
+    },
+    text: {
+      primary: '#f0f9ff',
+      secondary: '#bae6fd',
+      muted: '#7dd3fc',
+    },
+    border: '#0369a1',
+    success: '#059669',
+    warning: '#d97706',
+    error: '#dc2626',
+  },
+};
+
+export const forestTheme: Theme = {
+  name: 'Forest',
+  mode: 'dark',
+  colors: {
+    primary: '#059669',
+    secondary: '#065f46',
+    accent: '#10b981',
+    background: {
+      primary: '#064e3b',
+      secondary: '#065f46',
+      tertiary: '#047857',
+    },
+    text: {
+      primary: '#f0fdf4',
+      secondary: '#bbf7d0',
+      muted: '#86efac',
+    },
+    border: '#047857',
+    success: '#22c55e',
+    warning: '#f59e0b',
+    error: '#ef4444',
+  },
+};
+
+export const sunsetTheme: Theme = {
+  name: 'Sunset',
+  mode: 'dark',
+  colors: {
+    primary: '#f97316',
+    secondary: '#ea580c',
+    accent: '#fb923c',
+    background: {
+      primary: '#7c2d12',
+      secondary: '#9a3412',
+      tertiary: '#c2410c',
+    },
+    text: {
+      primary: '#fff7ed',
+      secondary: '#fed7aa',
+      muted: '#fdba74',
+    },
+    border: '#c2410c',
+    success: '#22c55e',
+    warning: '#eab308',
+    error: '#dc2626',
+  },
+};
+
 export const themes = {
   dark: darkTheme,
   light: lightTheme,
   cyberpunk: cyberpunkTheme,
+  ocean: oceanTheme,
+  forest: forestTheme,
+  sunset: sunsetTheme,
 };
 
 export type ThemeName = keyof typeof themes;
