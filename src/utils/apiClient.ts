@@ -257,7 +257,7 @@ export class MockApiClient extends ApiClient {
   private mockDelay = 1000; // Simulate network delay
 
   private async mockResponse<T>(data: T, shouldFail = false): Promise<ApiResponse<T>> {
-    await this.delay(Math.random() * this.mockDelay);
+    await new Promise(resolve => setTimeout(resolve, Math.random() * this.mockDelay));
     
     if (shouldFail) {
       return {
@@ -336,10 +336,6 @@ export class MockApiClient extends ApiClient {
   async delete<T>(endpoint: string): Promise<ApiResponse<T>> {
     console.log(`Mock DELETE: ${endpoint}`);
     return this.mockResponse({ deleted: true } as T);
-  }
-
-  private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }
 
