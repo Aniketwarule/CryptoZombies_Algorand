@@ -1,20 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Settings as SettingsIcon, Moon, Sun, Palette, Bell, Lock, Download, Upload } from 'lucide-react';
 import { storage } from '../utils/storage';
 import { themes, ThemeName } from '../constants/themes';
+import { LoadingSpinner } from '../components/Loading';
 
 const Settings = () => {
   const [currentTheme, setCurrentTheme] = useState<ThemeName>('dark');
   const [notifications, setNotifications] = useState(true);
   const [autoSave, setAutoSave] = useState(true);
   const [language, setLanguage] = useState('en');
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
 
-  const handleThemeChange = (themeName: ThemeName) => {
-    setCurrentTheme(themeName);
-    storage.set('algozombies-theme', themeName);
-    // Apply theme changes to document
-    document.documentElement.setAttribute('data-theme', themeName);
+  useEffect(() => {
+    // Simulate loading settings from storage
+    const loadSettings = async () => {
+      setIsLoading(true);
+      try {
+        // Simulate API call delay
+        await new Promise(resolve => setTimeout(resolve, 800));
+        
+        const savedTheme = storage.get('algozombies-theme') || 'dark';
+        setCurrentTheme(savedTheme as ThemeName);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadSettings();
+  }, []);
+
+  const handleThemeChange = async (themeName: ThemeName) => {
+    setIsSaving(true);
+    try {
+      // Simulate saving delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      setCurrentTheme(themeName);
+      storage.set('algozombies-theme', themeName);
+      // Apply theme changes to document
+      document.documentElement.setAttribute('data-theme', themeName);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleExportData = () => {
@@ -177,6 +206,17 @@ const Settings = () => {
     },
   ];
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen py-16 flex items-center justify-center">
+        <div className="text-center">
+          <LoadingSpinner size="lg" />
+          <p className="mt-4 text-gray-400">Loading settings...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen py-16">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -185,7 +225,15 @@ const Settings = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-4xl font-bold mb-8">Settings</h1>
+          <h1 className="text-4xl font-bold mb-8">
+            Settings
+            {isSaving && (
+              <span className="ml-3 inline-flex items-center">
+                <LoadingSpinner size="sm" />
+                <span className="ml-2 text-sm text-gray-400">Saving...</span>
+              </span>
+            )}
+          </h1>
           
           <div className="space-y-8">
             {settingsSections.map((section, sectionIndex) => (
