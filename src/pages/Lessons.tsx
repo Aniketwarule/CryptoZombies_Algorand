@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { BookOpen, Clock, Trophy, CheckCircle, Lock, Filter, Search } from 'lucide-react';
@@ -10,9 +10,6 @@ const Lessons = () => {
   const [selectedDifficulty, setSelectedDifficulty] = useState('All');
 
   const difficulties = ['All', 'Beginner', 'Intermediate', 'Advanced'];
-
-const Lessons = () => {
-  const { progress } = useProgress();
 
   const lessons = [
     {
