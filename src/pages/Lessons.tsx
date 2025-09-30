@@ -108,12 +108,16 @@ const Lessons = () => {
     }
   };
 
-  // Filter lessons based on search query
-  const filteredLessons = lessons.filter(lesson => 
-    lesson.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    lesson.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    lesson.topics.some(topic => topic.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  // Filter lessons based on search query and difficulty
+  const filteredLessons = lessons.filter(lesson => {
+    const matchesSearch = lesson.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      lesson.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      lesson.topics.some(topic => topic.toLowerCase().includes(searchQuery.toLowerCase()));
+    
+    const matchesDifficulty = selectedDifficulty === 'All' || lesson.difficulty === selectedDifficulty;
+    
+    return matchesSearch && matchesDifficulty;
+  });
 
   return (
     <div className="min-h-screen py-16">
@@ -134,15 +138,26 @@ const Lessons = () => {
 
         {/* Search and Filter Section */}
         <div className="mb-8 flex flex-col sm:flex-row gap-4 items-center justify-between">
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <input
-              type="text"
-              placeholder="Search lessons..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-dark-800 border border-dark-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-            />
+          <div className="flex flex-col sm:flex-row gap-4 flex-1">
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <input
+                type="text"
+                placeholder="Search lessons..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 bg-dark-800 border border-dark-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              />
+            </div>
+            <select
+              value={selectedDifficulty}
+              onChange={(e) => setSelectedDifficulty(e.target.value)}
+              className="px-4 py-2 bg-dark-800 border border-dark-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            >
+              {difficulties.map(difficulty => (
+                <option key={difficulty} value={difficulty}>{difficulty}</option>
+              ))}
+            </select>
           </div>
           <div className="text-sm text-gray-400">
             {filteredLessons.length} lesson{filteredLessons.length !== 1 ? 's' : ''} found
