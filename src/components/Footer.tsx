@@ -1,11 +1,8 @@
 // Footer component with social links and navigation
-import React from 'react';
 import { Github, Twitter, ExternalLink, Heart, Code } from 'lucide-react';
 import { APP_CONFIG } from '../constants';
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
-
   return (
     <footer className="bg-dark-800 border-t border-dark-700">
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
