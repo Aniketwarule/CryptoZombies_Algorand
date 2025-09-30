@@ -11,6 +11,9 @@ interface BaseModalProps {
   closeOnOverlayClick?: boolean;
   closeOnEscape?: boolean;
   showCloseButton?: boolean;
+  ariaLabel?: string;
+  ariaDescribedBy?: string;
+  initialFocus?: React.RefObject<HTMLElement>;
 }
 
 export const Modal: React.FC<BaseModalProps> = ({
@@ -21,11 +24,18 @@ export const Modal: React.FC<BaseModalProps> = ({
   closeOnOverlayClick = true,
   closeOnEscape = true,
   showCloseButton = true,
+  ariaLabel,
+  ariaDescribedBy,
+  initialFocus,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
+  const lastActiveElement = useRef<Element | null>(null);
 
   useEffect(() => {
     if (!isOpen) return;
+
+    // Store the currently focused element
+    lastActiveElement.current = document.activeElement;
 
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && closeOnEscape) {
@@ -39,14 +49,54 @@ export const Modal: React.FC<BaseModalProps> = ({
       }
     };
 
+    // Focus management for accessibility
+    const handleTabKey = (event: KeyboardEvent) => {
+      if (event.key === 'Tab' && modalRef.current) {
+        const focusableElements = modalRef.current.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        const firstElement = focusableElements[0] as HTMLElement;
+        const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+        if (event.shiftKey) {
+          if (document.activeElement === firstElement) {
+            event.preventDefault();
+            lastElement?.focus();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            event.preventDefault();
+            firstElement?.focus();
+          }
+        }
+      }
+    };
+
     document.addEventListener('keydown', handleEscape);
+    document.addEventListener('keydown', handleTabKey);
     document.addEventListener('mousedown', handleClickOutside);
     document.body.style.overflow = 'hidden';
 
+    // Set initial focus
+    if (initialFocus?.current) {
+      initialFocus.current.focus();
+    } else if (modalRef.current) {
+      const firstFocusableElement = modalRef.current.querySelector(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      ) as HTMLElement;
+      firstFocusableElement?.focus();
+    }
+
     return () => {
       document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener('keydown', handleTabKey);
       document.removeEventListener('mousedown', handleClickOutside);
       document.body.style.overflow = 'unset';
+      
+      // Restore focus to the previously focused element
+      if (lastActiveElement.current instanceof HTMLElement) {
+        lastActiveElement.current.focus();
+      }
     };
   }, [isOpen, onClose, closeOnEscape, closeOnOverlayClick]);
 
@@ -68,6 +118,10 @@ export const Modal: React.FC<BaseModalProps> = ({
         />
         <motion.div
           ref={modalRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label={ariaLabel}
+          aria-describedby={ariaDescribedBy}
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -80,7 +134,8 @@ export const Modal: React.FC<BaseModalProps> = ({
           {showCloseButton && (
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 p-1 text-gray-400 hover:text-white transition-colors z-10"
+              aria-label="Close modal"
+              className="absolute top-4 right-4 p-1 text-gray-400 hover:text-white transition-colors z-10 rounded focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               <X className="h-5 w-5" />
             </button>
@@ -173,13 +228,23 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} className="max-w-md w-full">
+    <Modal 
+      isOpen={isOpen} 
+      onClose={onClose} 
+      className="max-w-md w-full"
+      ariaLabel={`${type} confirmation dialog`}
+      ariaDescribedBy="confirm-modal-description"
+    >
       <ModalBody>
         <div className="flex items-start space-x-3">
           {getIcon()}
           <div>
-            <h3 className="text-lg font-medium text-white mb-2">{title}</h3>
-            <p className="text-gray-300">{message}</p>
+            <h3 className="text-lg font-medium text-white mb-2" role="heading" aria-level={2}>
+              {title}
+            </h3>
+            <p className="text-gray-300" id="confirm-modal-description">
+              {message}
+            </p>
           </div>
         </div>
       </ModalBody>
@@ -187,14 +252,16 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
         <button
           onClick={onClose}
           disabled={isLoading}
-          className="px-4 py-2 text-sm font-medium text-gray-300 bg-dark-700 rounded-md hover:bg-dark-600 transition-colors disabled:opacity-50"
+          aria-label={`Cancel ${type} action`}
+          className="px-4 py-2 text-sm font-medium text-gray-300 bg-dark-700 rounded-md hover:bg-dark-600 transition-colors disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-gray-500"
         >
           {cancelText}
         </button>
         <button
           onClick={onConfirm}
           disabled={isLoading}
-          className={`px-4 py-2 text-sm font-medium rounded-md transition-colors disabled:opacity-50 ${getConfirmButtonClass()}`}
+          aria-label={`Confirm ${type} action`}
+          className={`px-4 py-2 text-sm font-medium rounded-md transition-colors disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark-800 ${getConfirmButtonClass()}`}
         >
           {isLoading ? 'Loading...' : confirmText}
         </button>
