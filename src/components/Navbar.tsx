@@ -2,9 +2,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Zap, BookOpen, Home, Info, User, Settings, LogOut, ChevronDown, Trophy, Heart } from 'lucide-react';
+import { Zap, BookOpen, Home, Info, User, Settings, LogOut, ChevronDown, Trophy, Heart, Sun, Moon } from 'lucide-react';
 import WalletConnect from './WalletConnect';
 import { useWallet } from '../hooks/useWallet';
+import { storage } from '../utils/storage';
 
 /**
  * Navigation bar component for the AlgoZombies application
@@ -14,6 +15,7 @@ const Navbar = () => {
   const location = useLocation();
   const { isConnected, disconnect } = useWallet();
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const profileMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -26,6 +28,39 @@ const Navbar = () => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Initialize dark mode from storage
+  useEffect(() => {
+    const savedTheme = storage.get('algozombies-theme');
+    const isDark = savedTheme !== 'light';
+    setIsDarkMode(isDark);
+    
+    // Apply theme to document
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  }, []);
+
+  const toggleDarkMode = () => {
+    const newMode = !isDarkMode;
+    setIsDarkMode(newMode);
+    
+    // Save to storage and apply to document
+    const theme = newMode ? 'dark' : 'light';
+    storage.set('algozombies-theme', theme);
+    
+    if (newMode) {
+      document.documentElement.classList.add('dark');
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  };
 
   // Mock user data - in real app this would come from context or API
   const userData = {
@@ -86,6 +121,27 @@ const Navbar = () => {
 
           {/* Right side - Profile and Wallet */}
           <div className="flex items-center space-x-4">
+            {/* Dark Mode Toggle */}
+            <motion.button
+              onClick={toggleDarkMode}
+              className="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              aria-label={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
+            >
+              <motion.div
+                initial={false}
+                animate={{ rotate: isDarkMode ? 0 : 180 }}
+                transition={{ duration: 0.3 }}
+              >
+                {isDarkMode ? (
+                  <Sun className="h-4 w-4 text-yellow-400" />
+                ) : (
+                  <Moon className="h-4 w-4 text-blue-400" />
+                )}
+              </motion.div>
+            </motion.button>
+
             {isConnected ? (
               <div className="flex items-center space-x-4">
                 {/* User Stats Quick View */}
@@ -217,6 +273,19 @@ const Navbar = () => {
               </Link>
             );
           })}
+          
+          {/* Mobile Dark Mode Toggle */}
+          <button
+            onClick={toggleDarkMode}
+            className="w-full px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-dark-700 hover:text-white transition-colors duration-200 flex items-center space-x-2"
+          >
+            {isDarkMode ? (
+              <Sun className="h-4 w-4 text-yellow-400" />
+            ) : (
+              <Moon className="h-4 w-4 text-blue-400" />
+            )}
+            <span>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>
+          </button>
         </div>
       </div>
     </nav>
