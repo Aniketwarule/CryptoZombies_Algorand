@@ -16,7 +16,7 @@ interface WalletProvider {
   downloadUrl?: string;
 }
 
-const WalletConnect = () => {
+const WalletConnect = React.memo(() => {
   const { 
     isConnected, 
     address, 
@@ -218,6 +218,8 @@ const WalletConnect = () => {
       </span>
     </motion.button>
   );
-};
+});
+
+WalletConnect.displayName = 'WalletConnect';
 
 export default WalletConnect;

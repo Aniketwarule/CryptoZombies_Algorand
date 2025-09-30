@@ -9,7 +9,7 @@ interface ProgressTrackerProps {
 
 
 
-const ProgressTracker: React.FC<ProgressTrackerProps> = ({ lessonId }) => {
+const ProgressTracker: React.FC<ProgressTrackerProps> = React.memo(({ lessonId }) => {
   const { progress, getTotalProgress } = useProgress();
   const totalProgress = getTotalProgress();
 
@@ -101,6 +101,8 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = ({ lessonId }) => {
       </div>
     </div>
   );
-};
+});
+
+ProgressTracker.displayName = 'ProgressTracker';
 
 export default ProgressTracker;
