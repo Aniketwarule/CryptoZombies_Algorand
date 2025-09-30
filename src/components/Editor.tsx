@@ -2,6 +2,7 @@ import React from 'react';
 import MonacoEditor from '@monaco-editor/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, RotateCcw, CheckCircle, Copy, Keyboard, X } from 'lucide-react';
+import { useNotificationHelpers } from './NotificationSystem';
 
 interface EditorProps {
   code: string;
@@ -31,6 +32,7 @@ const Editor: React.FC<EditorProps> = ({
   readOnly = false
 }) => {
   const [showShortcuts, setShowShortcuts] = React.useState(false);
+  const { showSuccessToast, showErrorToast, showInfoToast } = useNotificationHelpers();
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Ctrl/Cmd + S - Format code
@@ -124,7 +126,10 @@ const Editor: React.FC<EditorProps> = ({
             ))}
           </select>
           <motion.button
-            onClick={onReset}
+            onClick={() => {
+              onReset();
+              showInfoToast('Code reset to original state');
+            }}
             className="btn-secondary flex items-center space-x-2"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -136,16 +141,24 @@ const Editor: React.FC<EditorProps> = ({
             onClick={() => {
               // Simple Prettier formatting for JS/TS/Python
               let formatted = code;
+              let success = false;
               try {
                 if (language === 'javascript' || language === 'typescript') {
                   // @ts-ignore
                   formatted = window.prettier.format(code, { parser: language, plugins: window.prettierPlugins });
+                  success = true;
                 } else if (language === 'python') {
                   // For Python, just basic indentation fix (mock)
                   formatted = code.split('\n').map(line => line.trim()).join('\n');
+                  success = true;
                 }
-              } catch (e) {}
+              } catch (e) {
+                showErrorToast('Formatting failed', 'Please check your code syntax');
+              }
               onChange(formatted);
+              if (success) {
+                showSuccessToast('Code formatted successfully!');
+              }
             }}
             className="btn-secondary flex items-center space-x-2"
             whileHover={{ scale: 1.02 }}
@@ -157,9 +170,10 @@ const Editor: React.FC<EditorProps> = ({
             onClick={async () => {
               try {
                 await navigator.clipboard.writeText(code);
-                // Could add a toast notification here
+                showSuccessToast('Code copied to clipboard!');
               } catch (err) {
                 console.error('Failed to copy code:', err);
+                showErrorToast('Failed to copy code', 'Please try again or copy manually');
               }
             }}
             className="btn-secondary flex items-center space-x-2"

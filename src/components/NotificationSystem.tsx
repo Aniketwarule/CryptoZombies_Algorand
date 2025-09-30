@@ -260,11 +260,43 @@ export const useNotificationHelpers = () => {
     });
   };
 
+  // Toast-specific helpers with shorter duration and auto-dismiss
+  const showToast = (title: string, type: 'success' | 'error' | 'warning' | 'info' = 'info', message?: string) => {
+    addNotification({
+      type,
+      title,
+      message,
+      duration: 3000, // Shorter duration for toasts
+      persistent: false,
+    });
+  };
+
+  const showSuccessToast = (title: string, message?: string) => {
+    showToast(title, 'success', message);
+  };
+
+  const showErrorToast = (title: string, message?: string) => {
+    showToast(title, 'error', message);
+  };
+
+  const showWarningToast = (title: string, message?: string) => {
+    showToast(title, 'warning', message);
+  };
+
+  const showInfoToast = (title: string, message?: string) => {
+    showToast(title, 'info', message);
+  };
+
   return {
     showSuccess,
     showError,
     showWarning,
     showInfo,
+    showToast,
+    showSuccessToast,
+    showErrorToast,
+    showWarningToast,
+    showInfoToast,
   };
 };
 
