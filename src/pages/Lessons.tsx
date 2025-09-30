@@ -176,7 +176,18 @@ const Lessons = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className={`card-hover relative ${!lesson.unlocked ? 'opacity-60' : ''}`}
+                whileHover={{ 
+                  y: -8, 
+                  scale: 1.02,
+                  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.1)"
+                }}
+                whileTap={{ scale: 0.98 }}
+                className={`card-hover relative cursor-pointer transition-all duration-300 ${!lesson.unlocked ? 'opacity-60' : ''}`}
+                style={{ 
+                  background: isCompleted 
+                    ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%)'
+                    : 'linear-gradient(135deg, rgba(31, 41, 55, 0.8) 0%, rgba(17, 24, 39, 0.9) 100%)'
+                }}
               >
                 {!lesson.unlocked && (
                   <div className="absolute top-4 right-4 z-10">
@@ -186,18 +197,32 @@ const Lessons = () => {
 
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center space-x-3">
-                    <div className={`p-2 rounded-lg ${isCompleted ? 'bg-primary-500/20' : 'bg-dark-700'}`}>
+                    <motion.div 
+                      className={`p-2 rounded-lg ${isCompleted ? 'bg-primary-500/20' : 'bg-dark-700'}`}
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                    >
                       {isCompleted ? (
                         <CheckCircle className="h-6 w-6 text-primary-500" />
                       ) : (
                         <BookOpen className="h-6 w-6 text-gray-400" />
                       )}
-                    </div>
+                    </motion.div>
                     <div>
-                      <h3 className="text-xl font-semibold">{lesson.title}</h3>
-                      <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium border ${getDifficultyColor(lesson.difficulty)}`}>
+                      <motion.h3 
+                        className="text-xl font-semibold"
+                        whileHover={{ x: 5 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
+                        {lesson.title}
+                      </motion.h3>
+                      <motion.span 
+                        className={`inline-block px-3 py-1 rounded-full text-xs font-medium border ${getDifficultyColor(lesson.difficulty)}`}
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ type: "spring", stiffness: 400 }}
+                      >
                         {lesson.difficulty}
-                      </span>
+                      </motion.span>
                     </div>
                   </div>
                   
@@ -220,13 +245,26 @@ const Lessons = () => {
 
                 <div className="mb-4">
                   <div className="flex flex-wrap gap-2">
-                    {lesson.topics.map((topic) => (
-                      <span
+                    {lesson.topics.map((topic, topicIndex) => (
+                      <motion.span
                         key={topic}
-                        className="px-2 py-1 bg-dark-700 text-xs rounded-md text-gray-300"
+                        className="px-2 py-1 bg-dark-700 text-xs rounded-md text-gray-300 cursor-pointer"
+                        whileHover={{ 
+                          scale: 1.1, 
+                          backgroundColor: "rgba(59, 130, 246, 0.2)",
+                          color: "#93c5fd"
+                        }}
+                        whileTap={{ scale: 0.95 }}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ 
+                          delay: index * 0.1 + topicIndex * 0.05,
+                          type: "spring",
+                          stiffness: 300
+                        }}
                       >
                         {topic}
-                      </span>
+                      </motion.span>
                     ))}
                   </div>
                 </div>
@@ -235,20 +273,47 @@ const Lessons = () => {
                   {lesson.unlocked ? (
                     <Link to={`/lessons/${lesson.id}`}>
                       <motion.button
-                        className="btn-primary"
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
+                        className="btn-primary relative overflow-hidden"
+                        whileHover={{ 
+                          scale: 1.05,
+                          boxShadow: "0 10px 20px rgba(16, 185, 129, 0.3)"
+                        }}
+                        whileTap={{ scale: 0.95 }}
+                        initial={{ backgroundPosition: "0% 50%" }}
+                        animate={{ backgroundPosition: "100% 50%" }}
+                        transition={{ 
+                          scale: { type: "spring", stiffness: 400, damping: 15 },
+                          backgroundPosition: { duration: 2, repeat: Infinity, repeatType: "reverse" }
+                        }}
+                        style={{
+                          backgroundImage: isCompleted 
+                            ? "linear-gradient(45deg, #10b981, #059669, #047857)"
+                            : "linear-gradient(45deg, #3b82f6, #1d4ed8, #1e40af)",
+                          backgroundSize: "200% 200%"
+                        }}
                       >
-                        {isCompleted ? 'Review' : 'Start Lesson'}
+                        <motion.span
+                          whileHover={{ x: 2 }}
+                          transition={{ type: "spring", stiffness: 400 }}
+                        >
+                          {isCompleted ? 'Review' : 'Start Lesson'}
+                        </motion.span>
                       </motion.button>
                     </Link>
                   ) : (
-                    <button
+                    <motion.button
                       disabled
                       className="btn-secondary opacity-50 cursor-not-allowed"
+                      whileHover={{ scale: 1.02, opacity: 0.6 }}
+                      transition={{ type: "spring", stiffness: 300 }}
                     >
-                      Locked
-                    </button>
+                      <motion.span
+                        animate={{ opacity: [0.5, 0.8, 0.5] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      >
+                        🔒 Locked
+                      </motion.span>
+                    </motion.button>
                   )}
                 </div>
               </motion.div>
