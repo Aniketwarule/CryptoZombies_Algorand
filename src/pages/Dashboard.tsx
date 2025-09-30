@@ -52,18 +52,18 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="container mx-auto py-8">
-      <h2 className="text-2xl font-bold mb-4">Dashboard</h2>
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+      <h2 className="text-xl sm:text-2xl font-bold mb-4">Dashboard</h2>
       <ProgressTracker />
       
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 my-4 sm:my-6">
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (
-            <div key={stat.label} className={`p-4 rounded-lg bg-dark-800 flex flex-col items-center shadow-lg border-b-4 ${stat.color}`}>
-              <Icon className="w-8 h-8 mb-2" />
-              <span className="text-lg font-bold">{stat.value}</span>
-              <span className="text-xs text-gray-400 mt-1">{stat.label}</span>
+            <div key={stat.label} className={`p-3 sm:p-4 rounded-lg bg-dark-800 flex flex-col items-center shadow-lg border-b-4 ${stat.color}`}>
+              <Icon className="w-6 h-6 sm:w-8 sm:h-8 mb-2" />
+              <span className="text-base sm:text-lg font-bold">{stat.value}</span>
+              <span className="text-xs text-gray-400 mt-1 text-center">{stat.label}</span>
             </div>
           );
         })}
