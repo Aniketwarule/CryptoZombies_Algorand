@@ -1,5 +1,6 @@
 // Main App component - routing and layout setup
-import React, { Suspense, ErrorBoundary } from 'react';
+import React, { Suspense } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
