@@ -1,12 +1,7 @@
-import React, { Suspense, lazy } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Play, RotateCcw, CheckCircle, Copy, Keyboard, X } from 'lucide-react';
-import { useNotificationHelpers } from './NotificationSystem';
-import { LoadingSpinner } from './Loading';
-import { usePerformance } from '../utils/performance';
-
-// Lazy load Monaco Editor for better initial page load
-const MonacoEditor = lazy(() => import('@monaco-editor/react'));
+import React, { useCallback, useMemo } from 'react';
+import MonacoEditor from '@monaco-editor/react';
+import { motion } from 'framer-motion';
+import { Play, RotateCcw, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 
 interface EditorProps {
   code: string;
@@ -20,11 +15,10 @@ interface EditorProps {
     score?: number;
   };
   language?: string;
-  // placeholder?: string;
+  placeholder?: string;
   readOnly?: boolean;
 }
 
-const THEMES = ["vs-dark", "vs-light", "solarized-dark"];
 const Editor: React.FC<EditorProps> = ({
   code,
   onChange,
@@ -33,67 +27,13 @@ const Editor: React.FC<EditorProps> = ({
   isValidating,
   validationResult,
   language = 'python',
+  placeholder = '# Write your PyTeal code here...',
   readOnly = false
 }) => {
-  const [showShortcuts, setShowShortcuts] = React.useState(false);
-  const { showSuccessToast, showErrorToast, showInfoToast } = useNotificationHelpers();
-  const { measureAsync, measureSync } = usePerformance();
-  React.useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Ctrl/Cmd + S - Format code
-      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-        e.preventDefault();
-        let formatted = code;
-        if (language === 'javascript' || language === 'typescript') {
-          // @ts-ignore
-          formatted = window.prettier?.format?.(code, { parser: language, plugins: window.prettierPlugins }) || code;
-        } else if (language === 'python') {
-          formatted = code.split('\n').map((line: string) => line.trim()).join('\n');
-        }
-        onChange(formatted);
-      }
-      
-      // Ctrl/Cmd + Enter - Run code
-      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-        e.preventDefault();
-        onRun();
-      }
-      
-      // Ctrl/Cmd + R - Reset code
-      if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
-        e.preventDefault();
-        onReset();
-      }
-      
-      // F9 - Run code (alternative)
-      if (e.key === 'F9') {
-        e.preventDefault();
-        onRun();
-      }
-      
-      // Ctrl/Cmd + Shift + F - Format code (alternative)
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'F') {
-        e.preventDefault();
-        let formatted = code;
-        if (language === 'javascript' || language === 'typescript') {
-          // @ts-ignore
-          formatted = window.prettier?.format?.(code, { parser: language, plugins: window.prettierPlugins }) || code;
-        } else if (language === 'python') {
-          formatted = code.split('\n').map((line: string) => line.trim()).join('\n');
-        }
-        onChange(formatted);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [code, language, onChange, onRun]);
-  const [theme, setTheme] = React.useState("vs-dark");
-  const [showOutput, setShowOutput] = React.useState(false);
-
-  const editorOptions = React.useMemo(() => ({
+  const editorOptions = useMemo(() => ({
     minimap: { enabled: false },
     fontSize: 14,
-    theme: theme,
+    theme: 'vs-dark',
     automaticLayout: true,
     scrollBeyondLastLine: false,
     wordWrap: 'on' as const,
@@ -112,83 +52,25 @@ const Editor: React.FC<EditorProps> = ({
       showKeywords: true,
       showSnippets: true,
     },
-  }), [readOnly, theme]);
+  }), [readOnly]);
+
+  const handleEditorChange = useCallback((value: string | undefined) => {
+    onChange(value || '');
+  }, [onChange]);
 
   return (
     <div className="flex flex-col h-full">
       <div className="flex items-center justify-between p-4 bg-dark-800 border-b border-dark-700">
         <h3 className="text-lg font-semibold">Code Editor</h3>
-        <div className="flex space-x-2 items-center">
-          <label htmlFor="theme-select" className="mr-2">Theme:</label>
-          <select
-            id="theme-select"
-            value={theme}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setTheme(e.target.value)}
-            className="px-2 py-1 rounded bg-dark-700 text-white border border-dark-600"
-          >
-            {THEMES.map((t: string) => (
-              <option key={t} value={t}>{t === "vs-dark" ? "Dark" : t === "vs-light" ? "Light" : "Solarized Dark"}</option>
-            ))}
-          </select>
+        <div className="flex space-x-2">
           <motion.button
-            onClick={() => {
-              onReset();
-              showInfoToast('Code reset to original state');
-            }}
+            onClick={onReset}
             className="btn-secondary flex items-center space-x-2"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
             <RotateCcw className="h-4 w-4" />
             <span>Reset</span>
-          </motion.button>
-          <motion.button
-            onClick={() => {
-              measureSync('code-format', () => {
-                // Simple Prettier formatting for JS/TS/Python
-                let formatted = code;
-                let success = false;
-                try {
-                  if (language === 'javascript' || language === 'typescript') {
-                    // @ts-ignore
-                    formatted = window.prettier.format(code, { parser: language, plugins: window.prettierPlugins });
-                    success = true;
-                  } else if (language === 'python') {
-                    // For Python, just basic indentation fix (mock)
-                    formatted = code.split('\n').map(line => line.trim()).join('\n');
-                    success = true;
-                  }
-                } catch (e) {
-                  showErrorToast('Formatting failed', 'Please check your code syntax');
-                }
-                onChange(formatted);
-                if (success) {
-                  showSuccessToast('Code formatted successfully!');
-                }
-              });
-            }}
-            className="btn-secondary flex items-center space-x-2"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <span>Format</span>
-          </motion.button>
-          <motion.button
-            onClick={async () => {
-              try {
-                await navigator.clipboard.writeText(code);
-                showSuccessToast('Code copied to clipboard!');
-              } catch (err) {
-                console.error('Failed to copy code:', err);
-                showErrorToast('Failed to copy code', 'Please try again or copy manually');
-              }
-            }}
-            className="btn-secondary flex items-center space-x-2"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <Copy className="h-4 w-4" />
-            <span>Copy</span>
           </motion.button>
           <motion.button
             onClick={onRun}
@@ -200,55 +82,18 @@ const Editor: React.FC<EditorProps> = ({
             <Play className="h-4 w-4" />
             <span>{isValidating ? 'Validating...' : 'Run & Validate'}</span>
           </motion.button>
-          <motion.button
-            onClick={() => setShowShortcuts(!showShortcuts)}
-            className="btn-secondary flex items-center space-x-2"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            title="Keyboard Shortcuts"
-          >
-            <Keyboard className="h-4 w-4" />
-            <span className="hidden sm:inline">Shortcuts</span>
-          </motion.button>
-          <motion.button
-            onClick={() => setShowOutput(true)}
-            className="btn-primary flex items-center space-x-2"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <span>Run Code</span>
-          </motion.button>
-  const [showOutput, setShowOutput] = React.useState(false);
-      {showOutput && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-dark-900 p-6 rounded shadow-lg w-96">
-            <h4 className="text-lg font-bold mb-2">Output</h4>
-            <pre className="bg-dark-800 p-2 rounded text-green-400 text-sm mb-4">{`Mock output for code:\n${code.slice(0, 120)}...`}</pre>
-            <button className="btn-primary w-full" onClick={() => setShowOutput(false)}>Close</button>
-          </div>
-        </div>
-      )}
         </div>
       </div>
 
       <div className="flex-1">
-        <Suspense fallback={
-          <div className="h-96 flex items-center justify-center bg-dark-900 rounded">
-            <div className="text-center">
-              <LoadingSpinner size="md" />
-              <p className="mt-2 text-gray-400">Loading code editor...</p>
-            </div>
-          </div>
-        }>
-          <MonacoEditor
-            height="400px"
-            language={language}
-            value={code}
-            onChange={(value: string | undefined) => onChange(value || '')}
-            options={editorOptions}
-            theme={theme}
-          />
-        </Suspense>
+        <MonacoEditor
+          height="400px"
+          language={language}
+          value={code}
+          onChange={(value) => onChange(value || '')}
+          options={editorOptions}
+          theme="vs-dark"
+        />
       </div>
 
       {validationResult && (
@@ -279,68 +124,8 @@ const Editor: React.FC<EditorProps> = ({
           <p className="mt-2 text-sm">{validationResult.message}</p>
         </motion.div>
       )}
-
-      {/* Keyboard Shortcuts Panel */}
-      <AnimatePresence>
-        {showShortcuts && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="bg-dark-800 border-t border-dark-700 p-4"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <h4 className="text-lg font-semibold">Keyboard Shortcuts</h4>
-              <button
-                onClick={() => setShowShortcuts(false)}
-                className="text-gray-400 hover:text-white"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-              <div className="flex items-center justify-between">
-                <span className="text-gray-300">Run Code</span>
-                <div className="flex items-center space-x-1">
-                  <kbd className="px-2 py-1 bg-dark-700 rounded text-xs">Ctrl</kbd>
-                  <span>+</span>
-                  <kbd className="px-2 py-1 bg-dark-700 rounded text-xs">Enter</kbd>
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-300">Format Code</span>
-                <div className="flex items-center space-x-1">
-                  <kbd className="px-2 py-1 bg-dark-700 rounded text-xs">Ctrl</kbd>
-                  <span>+</span>
-                  <kbd className="px-2 py-1 bg-dark-700 rounded text-xs">S</kbd>
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-300">Reset Code</span>
-                <div className="flex items-center space-x-1">
-                  <kbd className="px-2 py-1 bg-dark-700 rounded text-xs">Ctrl</kbd>
-                  <span>+</span>
-                  <kbd className="px-2 py-1 bg-dark-700 rounded text-xs">R</kbd>
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-300">Run Code (Alt)</span>
-                <kbd className="px-2 py-1 bg-dark-700 rounded text-xs">F9</kbd>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-300">Format (Alt)</span>
-                <div className="flex items-center space-x-1">
-                  <kbd className="px-2 py-1 bg-dark-700 rounded text-xs">Ctrl</kbd>
-                  <span>+</span>
-                  <kbd className="px-2 py-1 bg-dark-700 rounded text-xs">Shift</kbd>
-                  <span>+</span>
-                  <kbd className="px-2 py-1 bg-dark-700 rounded text-xs">F</kbd>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 };
+
+export default Editor;
