@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import algosdk from 'algosdk';
+import { PeraWalletConnect } from '@perawallet/connect';
 
 interface WalletState {
   isConnected: boolean;
@@ -8,6 +9,9 @@ interface WalletState {
   balance: number;
   error: string | null;
 }
+
+// Initialize Pera Wallet
+const peraWallet = new PeraWalletConnect();
 
 export const useWallet = () => {
   const [walletState, setWalletState] = useState<WalletState>({
@@ -18,7 +22,7 @@ export const useWallet = () => {
     error: null
   });
 
-  // Mock Algorand client for TestNet
+  // Algorand client for TestNet
   const algodClient = new algosdk.Algodv2(
     '',
     'https://testnet-api.algonode.cloud',
@@ -26,19 +30,20 @@ export const useWallet = () => {
   );
 
   const connect = async () => {
-    setWalletState(prev => ({ ...prev, isConnecting: true }));
+    setWalletState(prev => ({ ...prev, isConnecting: true, error: null }));
     
     try {
-      // Simulate wallet connection
-      // In a real app, this would integrate with Pera, Defly, or MyAlgo
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Connect to Pera Wallet
+      const accounts = await peraWallet.connect();
       
-      // Mock account generation for demo
-      const account = algosdk.generateAccount();
-      const address = account.addr;
+      if (accounts.length === 0) {
+        throw new Error('No accounts found');
+      }
       
-      // Mock balance (in a real app, this would fetch from the blockchain)
-      const balance = Math.random() * 100;
+      const address = accounts[0];
+      
+      // Fetch real balance from blockchain
+      const balance = await getBalance(address);
       
       setWalletState({
         isConnected: true,
@@ -59,61 +64,102 @@ export const useWallet = () => {
       setWalletState(prev => ({ 
         ...prev, 
         isConnecting: false,
-        error: 'Failed to connect wallet. Please try again.'
+        error: error instanceof Error ? error.message : 'Failed to connect wallet. Please try again.'
       }));
+      throw error;
     }
   };
 
-  const disconnect = () => {
-    setWalletState({
-      isConnected: false,
-      address: null,
-      isConnecting: false,
-      balance: 0,
-      error: null
-    });
-    localStorage.removeItem('algozombies-wallet');
+  const disconnect = async () => {
+    try {
+      await peraWallet.disconnect();
+      setWalletState({
+        isConnected: false,
+        address: null,
+        isConnecting: false,
+        balance: 0,
+        error: null
+      });
+      localStorage.removeItem('algozombies-wallet');
+    } catch (error) {
+      console.error('Failed to disconnect wallet:', error);
+    }
   };
 
   const getBalance = async (address: string) => {
     try {
       const accountInfo = await algodClient.accountInformation(address).do();
-      return algosdk.microAlgosToAlgos(accountInfo.amount);
+      const balance = algosdk.microalgosToAlgos(Number(accountInfo.amount));
+      
+      // Update the wallet state with the new balance
+      setWalletState(prev => ({
+        ...prev,
+        balance: parseFloat(balance.toFixed(6))
+      }));
+      
+      // Update localStorage
+      localStorage.setItem('algozombies-wallet', JSON.stringify({
+        address,
+        balance: parseFloat(balance.toFixed(6))
+      }));
+      
+      return balance;
     } catch (error) {
       console.error('Failed to fetch balance:', error);
       return 0;
     }
   };
 
-  // Load wallet state from localStorage on mount
+  // Reconnect to Pera Wallet on mount if there was a previous session
   useEffect(() => {
-    const stored = localStorage.getItem('algozombies-wallet');
-    if (stored) {
+    const reconnect = async () => {
       try {
-        const { address, balance } = JSON.parse(stored);
-        // Ensure address is a valid string and balance is a valid number
-        if (typeof address === 'string' && typeof balance === 'number') {
+        const accounts = await peraWallet.reconnectSession();
+        
+        if (accounts.length > 0) {
+          const address = accounts[0];
+          const balance = await getBalance(address);
+          
           setWalletState({
             isConnected: true,
             address,
             isConnecting: false,
-            balance
+            balance: parseFloat(balance.toFixed(2)),
+            error: null
           });
-        } else {
-          // Clear invalid data from localStorage
-          localStorage.removeItem('algozombies-wallet');
+
+          // Store in localStorage
+          localStorage.setItem('algozombies-wallet', JSON.stringify({
+            address,
+            balance: parseFloat(balance.toFixed(2))
+          }));
         }
       } catch (error) {
-        console.error('Failed to parse stored wallet data:', error);
+        console.error('Failed to reconnect wallet:', error);
         localStorage.removeItem('algozombies-wallet');
       }
-    }
+    };
+
+    reconnect();
+
+    // Listen for Pera Wallet disconnect event
+    peraWallet.connector?.on('disconnect', () => {
+      setWalletState({
+        isConnected: false,
+        address: null,
+        isConnecting: false,
+        balance: 0,
+        error: null
+      });
+      localStorage.removeItem('algozombies-wallet');
+    });
   }, []);
 
   return {
     ...walletState,
     connect,
     disconnect,
-    getBalance
+    getBalance,
+    peraWallet
   };
 };

@@ -1,20 +1,8 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Wallet, LogOut, ChevronDown, Copy, CheckCircle, 
-  ExternalLink, Shield, Activity, TrendingUp, AlertCircle 
-} from 'lucide-react';
+import { Wallet, LogOut, ChevronDown, RefreshCw } from 'lucide-react';
 import { useWallet } from '../hooks/useWallet';
 import { useNotificationHelpers } from './NotificationSystem';
-
-interface WalletProvider {
-  id: string;
-  name: string;
-  icon: string;
-  description: string;
-  isInstalled?: boolean;
-  downloadUrl?: string;
-}
 
 const WalletConnect = React.memo(() => {
   const { 
@@ -23,88 +11,32 @@ const WalletConnect = React.memo(() => {
     isConnecting, 
     connect, 
     disconnect, 
-    balance 
+    balance,
+    getBalance
   } = useWallet();
   
   const { showSuccess, showError } = useNotificationHelpers();
   const [showDropdown, setShowDropdown] = React.useState(false);
-  const [connectionStatus, setConnectionStatus] = React.useState<'stable' | 'unstable' | 'slow'>('stable');
-  const [lastSyncTime, setLastSyncTime] = React.useState<Date | null>(null);
+  const [isRefreshing, setIsRefreshing] = React.useState(false);
+  const [lastSyncTime, setLastSyncTime] = React.useState<Date>(new Date());
 
-  // Monitor connection status
+  // Update sync time when balance changes
   React.useEffect(() => {
-    if (!isConnected) return;
-
-    const checkConnectionStatus = () => {
-      // Simulate connection monitoring
-      const statuses: ('stable' | 'unstable' | 'slow')[] = ['stable', 'stable', 'stable', 'slow', 'unstable'];
-      const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
-      setConnectionStatus(randomStatus);
+    if (isConnected && balance > 0) {
       setLastSyncTime(new Date());
-    };
-
-    // Initial check
-    checkConnectionStatus();
-    
-    // Check every 10 seconds
-    const interval = setInterval(checkConnectionStatus, 10000);
-    
-    return () => clearInterval(interval);
-  }, [isConnected]);
-  const [showProviders, setShowProviders] = React.useState(false);
-  const [copied, setCopied] = React.useState(false);
-  const [recentTransactions, setRecentTransactions] = React.useState<any[]>([]);
-
-  // Mock wallet providers
-  const walletProviders: WalletProvider[] = [
-    {
-      id: 'pera',
-      name: 'Pera Wallet',
-      icon: '🟢',
-      description: 'Official Algorand wallet',
-      isInstalled: true
-    },
-    {
-      id: 'myalgo',
-      name: 'MyAlgo',
-      icon: '🔵',
-      description: 'Web-based Algorand wallet',
-      isInstalled: true
-    },
-    {
-      id: 'defly',
-      name: 'Defly',
-      icon: '🟣',
-      description: 'Mobile-first Algorand wallet',
-      isInstalled: false,
-      downloadUrl: 'https://defly.app'
     }
-  ];
+  }, [isConnected, balance]);
 
   const truncateAddress = (addr: string) => {
     return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
   };
 
-  const copyToClipboard = async () => {
-    if (address) {
-      try {
-        await navigator.clipboard.writeText(address);
-        setCopied(true);
-        showSuccess('Address copied!', 'Wallet address copied to clipboard');
-        setTimeout(() => setCopied(false), 2000);
-      } catch (error) {
-        showError('Copy failed', 'Could not copy address to clipboard');
-      }
-    }
-  };
-
-  const handleConnect = async (providerId: string) => {
+  const handleConnect = async () => {
     try {
-      await connect(providerId);
-      showSuccess('Wallet connected!', `Successfully connected to ${providerId}`);
-      setShowProviders(false);
+      await connect();
+      showSuccess('Wallet connected!', 'Successfully connected to wallet');
     } catch (error) {
-      showError('Connection failed', `Failed to connect to ${providerId}`);
+      showError('Connection failed', 'Failed to connect wallet');
     }
   };
 
@@ -118,19 +50,20 @@ const WalletConnect = React.memo(() => {
     }
   };
 
-  const formatBalance = (bal: number) => {
-    return new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 6
-    }).format(bal);
+  const handleRefreshBalance = async () => {
+    if (!address) return;
+    
+    setIsRefreshing(true);
+    try {
+      await getBalance(address);
+      setLastSyncTime(new Date());
+      showSuccess('Balance updated', 'Wallet balance refreshed successfully');
+    } catch (error) {
+      showError('Refresh failed', 'Failed to refresh balance');
+    } finally {
+      setIsRefreshing(false);
+    }
   };
-
-  // Mock recent transactions
-  const getRecentTransactions = () => [
-    { id: 1, type: 'receive', amount: 5.25, hash: 'ABC123...', timestamp: Date.now() - 3600000 },
-    { id: 2, type: 'send', amount: -2.1, hash: 'DEF456...', timestamp: Date.now() - 7200000 },
-    { id: 3, type: 'contract', amount: 0, hash: 'GHI789...', timestamp: Date.now() - 10800000 },
-  ];
 
   if (isConnected && address) {
     return (
@@ -158,33 +91,31 @@ const WalletConnect = React.memo(() => {
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-sm text-gray-400">Connection Status</p>
                   <div className="flex items-center space-x-2">
-                    <div className={`w-2 h-2 rounded-full ${
-                      connectionStatus === 'stable' ? 'bg-green-500' :
-                      connectionStatus === 'slow' ? 'bg-yellow-500' : 'bg-red-500'
-                    }`} />
-                    <span className={`text-xs capitalize ${
-                      connectionStatus === 'stable' ? 'text-green-400' :
-                      connectionStatus === 'slow' ? 'text-yellow-400' : 'text-red-400'
-                    }`}>
-                      {connectionStatus}
-                    </span>
+                    <div className="w-2 h-2 rounded-full bg-green-500" />
+                    <span className="text-xs text-green-400">Connected</span>
                   </div>
                 </div>
-                {lastSyncTime && (
-                  <p className="text-xs text-gray-500 mb-3">
-                    Last sync: {lastSyncTime.toLocaleTimeString()}
-                  </p>
-                )}
+                <p className="text-xs text-gray-500 mb-3">
+                  Last sync: {lastSyncTime.toLocaleTimeString()}
+                </p>
                 <p className="text-sm text-gray-400">Connected Address</p>
-                <p className="font-mono text-sm">{truncateAddress(address)}</p>
-                <p className="text-sm text-gray-400 mt-2">Balance</p>
-                <p className="font-mono text-sm text-primary-500">{balance} ALGO</p>
+                <p className="font-mono text-sm break-all mb-3">{address}</p>
+                
+                <div className="flex items-center justify-between mb-1">
+                  <p className="text-sm text-gray-400">Balance</p>
+                  <button
+                    onClick={handleRefreshBalance}
+                    disabled={isRefreshing}
+                    className="p-1 hover:bg-dark-600 rounded transition-colors disabled:opacity-50"
+                    title="Refresh balance"
+                  >
+                    <RefreshCw className={`h-3 w-3 text-gray-400 ${isRefreshing ? 'animate-spin' : ''}`} />
+                  </button>
+                </div>
+                <p className="font-mono text-lg font-semibold text-primary-400">{balance.toFixed(6)} ALGO</p>
               </div>
               <button
-                onClick={() => {
-                  disconnect();
-                  setShowDropdown(false);
-                }}
+                onClick={handleDisconnect}
                 className="w-full p-3 text-left text-red-400 hover:bg-dark-700 transition-colors duration-200 flex items-center space-x-2"
               >
                 <LogOut className="h-4 w-4" />
@@ -206,7 +137,7 @@ const WalletConnect = React.memo(() => {
 
   return (
     <motion.button
-      onClick={connect}
+      onClick={handleConnect}
       disabled={isConnecting}
       className="flex items-center space-x-2 bg-primary-500 hover:bg-primary-600 disabled:bg-primary-500/50 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200"
       whileHover={{ scale: 1.02 }}

@@ -1,8 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Camera, Save, X, AlertCircle, CheckCircle2, Upload, Eye, EyeOff, Shield, Bell, Globe, Palette, Moon, Sun } from 'lucide-react';
+import { User, Camera, Save, X, AlertCircle, CheckCircle2, Upload, Eye, EyeOff, Shield, Bell, Globe, Palette, Moon, Sun, Wallet } from 'lucide-react';
 import InputField from '../components/InputField';
 import LazyImage from '../components/LazyImage';
+import { useWallet } from '../hooks/useWallet';
 
 interface ProfileFormData {
   displayName: string;
@@ -32,6 +33,7 @@ interface UserPreferences {
 }
 
 const ProfileSettingsPage: React.FC = () => {
+  const { address, balance, isConnected } = useWallet();
   const [activeTab, setActiveTab] = useState<'profile' | 'security' | 'preferences'>('profile');
   const [isLoading, setIsLoading] = useState(false);
   const [showPasswords, setShowPasswords] = useState({
@@ -43,10 +45,10 @@ const ProfileSettingsPage: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState<ProfileFormData>({
-    displayName: 'Alex Johnson',
-    email: 'alex@example.com',
-    bio: 'Passionate about blockchain technology and algorithmic problem solving.',
-    walletAddress: 'ALGORITHM_WALLET_ADDRESS_PLACEHOLDER',
+    displayName: 'Aniketwarule',
+    email: 'user@example.com',
+    bio: 'Learning Algorand smart contracts and blockchain development.',
+    walletAddress: address || '',
     avatar: '/api/placeholder/120/120',
     currentPassword: '',
     newPassword: '',
@@ -133,7 +135,7 @@ const ProfileSettingsPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-dark-900 py-8">
-      <div className="max-w-4xl mx-auto px-4">
+      <div className="max-w-6xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -141,9 +143,14 @@ const ProfileSettingsPage: React.FC = () => {
           className="bg-dark-800 rounded-xl shadow-2xl overflow-hidden"
         >
           {/* Header */}
-          <div className="bg-gradient-to-r from-primary-600 to-primary-700 px-6 py-8">
-            <h1 className="text-3xl font-bold text-white mb-2">Profile Settings</h1>
-            <p className="text-primary-100">Manage your account settings and preferences</p>
+          <div className="bg-gradient-to-r from-primary-600 to-purple-600 px-8 py-6">
+            <div className="flex items-center space-x-3">
+              <User className="w-8 h-8 text-white" />
+              <div>
+                <h1 className="text-2xl font-bold text-white">Profile Settings</h1>
+                <p className="text-primary-100 text-sm">Manage your account and preferences</p>
+              </div>
+            </div>
           </div>
 
           {/* Tab Navigation */}
@@ -185,116 +192,188 @@ const ProfileSettingsPage: React.FC = () => {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.3 }}
-                  className="space-y-6"
                 >
-                  {/* Avatar Section */}
-                  <div className="flex items-center space-x-6">
-                    <motion.div
-                      className="relative group"
-                      whileHover={{ scale: 1.05 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <LazyImage
-                        src={avatarPreview || formData.avatar}
-                        alt="Profile Avatar"
-                        width={120}
-                        height={120}
-                        className="w-30 h-30 rounded-full object-cover border-4 border-primary-500"
-                      />
-                      <button
-                        onClick={() => fileInputRef.current?.click()}
-                        className="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        <Camera className="w-6 h-6 text-white" />
-                      </button>
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept="image/*"
-                        onChange={handleAvatarChange}
-                        className="hidden"
-                      />
-                    </motion.div>
+                  {/* Two Column Layout */}
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* Left Column - Avatar & Wallet Status */}
+                    <div className="lg:col-span-1 space-y-6">
+                      {/* Avatar Section */}
+                      <div className="bg-dark-700/50 border border-dark-600 rounded-xl p-6">
+                        <h3 className="text-lg font-semibold text-white mb-4">Profile Photo</h3>
+                        <motion.div
+                          className="relative group mb-4"
+                          whileHover={{ scale: 1.05 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <div className="w-full aspect-square rounded-xl bg-gradient-to-br from-primary-500 to-purple-500 p-1">
+                            <LazyImage
+                              src={avatarPreview || formData.avatar}
+                              alt="Profile Avatar"
+                              width={200}
+                              height={200}
+                              className="w-full h-full rounded-xl object-cover bg-dark-800"
+                            />
+                          </div>
+                          <button
+                            onClick={() => fileInputRef.current?.click()}
+                            className="absolute inset-0 bg-black/60 rounded-xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 backdrop-blur-sm"
+                          >
+                            <div className="text-center">
+                              <Camera className="w-8 h-8 text-white mx-auto mb-2" />
+                              <span className="text-sm text-white font-medium">Change Photo</span>
+                            </div>
+                          </button>
+                          <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept="image/*"
+                            onChange={handleAvatarChange}
+                            className="hidden"
+                          />
+                        </motion.div>
+                        
+                        <div className="space-y-2">
+                          <motion.button
+                            onClick={() => fileInputRef.current?.click()}
+                            className="w-full flex items-center justify-center space-x-2 px-4 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors font-medium"
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            <Upload className="w-4 h-4" />
+                            <span>Upload Photo</span>
+                          </motion.button>
+                          {avatarPreview && (
+                            <button
+                              onClick={() => {
+                                setAvatarPreview(null);
+                                setFormData(prev => ({ ...prev, avatar: '/api/placeholder/120/120' }));
+                              }}
+                              className="w-full px-4 py-2.5 bg-dark-600 hover:bg-dark-500 text-gray-300 rounded-lg transition-colors font-medium"
+                            >
+                              Remove Photo
+                            </button>
+                          )}
+                        </div>
+                      </div>
 
-                    <div>
-                      <h3 className="text-xl font-semibold text-white mb-1">Profile Photo</h3>
-                      <p className="text-gray-400 text-sm mb-3">
-                        Click on the image to upload a new avatar. JPG, PNG formats supported.
-                      </p>
-                      <button
-                        onClick={() => fileInputRef.current?.click()}
-                        className="flex items-center space-x-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors"
-                      >
-                        <Upload className="w-4 h-4" />
-                        <span>Upload New Photo</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Profile Form */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <InputField
-                      label="Display Name"
-                      value={formData.displayName}
-                      onChange={(value) => handleInputChange('displayName', value)}
-                      placeholder="Enter your display name"
-                      validation={{
-                        minLength: 2,
-                        maxLength: 50,
-                      }}
-                    />
-                    
-                    <InputField
-                      label="Email Address"
-                      type="email"
-                      value={formData.email}
-                      onChange={(value) => handleInputChange('email', value)}
-                      placeholder="Enter your email"
-                      validation={{
-                        pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                        custom: (value) => {
-                          if (!value.includes('@')) return 'Please enter a valid email address';
-                          return null;
-                        }
-                      }}
-                    />
-
-                    <div className="md:col-span-2">
-                      <InputField
-                        label="Wallet Address"
-                        value={formData.walletAddress}
-                        onChange={(value) => handleInputChange('walletAddress', value)}
-                        placeholder="Enter your Algorand wallet address"
-                        validation={{
-                          minLength: 58,
-                          maxLength: 58,
-                          custom: (value) => {
-                            if (value.length === 58 && /^[A-Z2-7]+$/.test(value)) return null;
-                            return 'Please enter a valid 58-character Algorand address';
-                          }
-                        }}
-                      />
+                      {/* Wallet Status Card */}
+                      {isConnected && (
+                        <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/30 rounded-xl p-6">
+                          <div className="flex items-center space-x-3 mb-3">
+                            <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
+                              <Wallet className="w-5 h-5 text-green-400" />
+                            </div>
+                            <div>
+                              <h4 className="text-white font-semibold">Wallet Connected</h4>
+                              <p className="text-xs text-gray-400">Algorand MainNet</p>
+                            </div>
+                          </div>
+                          {balance !== undefined && (
+                            <div className="mt-4 pt-4 border-t border-green-500/20">
+                              <p className="text-xs text-gray-400 mb-1">Balance</p>
+                              <p className="text-2xl font-bold text-green-400">{balance.toFixed(2)} ALGO</p>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
 
-                    <div className="md:col-span-2">
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Bio
-                      </label>
-                      <textarea
-                        value={formData.bio}
-                        onChange={(e) => handleInputChange('bio', e.target.value)}
-                        rows={4}
-                        className="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
-                        placeholder="Tell us about yourself..."
-                        maxLength={500}
-                      />
-                      <div className="flex justify-between items-center mt-2">
-                        <p className="text-xs text-gray-500">
-                          Share a bit about your interests and goals
-                        </p>
-                        <span className="text-xs text-gray-400">
-                          {formData.bio.length}/500
-                        </span>
+                    {/* Right Column - Form Fields */}
+                    <div className="lg:col-span-2 space-y-6">
+                      {/* Personal Info Section */}
+                      <div className="bg-dark-700/50 border border-dark-600 rounded-xl p-6">
+                        <h3 className="text-lg font-semibold text-white mb-4">Personal Information</h3>
+                        <div className="space-y-4">
+                          <InputField
+                            label="Username"
+                            value={formData.displayName}
+                            onChange={(value) => handleInputChange('displayName', value)}
+                            placeholder="Enter your username"
+                            validation={{
+                              minLength: 2,
+                              maxLength: 20,
+                            }}
+                            required
+                          />
+                          
+                          <InputField
+                            label="Email"
+                            type="email"
+                            value={formData.email}
+                            onChange={(value) => handleInputChange('email', value)}
+                            placeholder="Enter your email"
+                            validation={{
+                              pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                              custom: (value) => {
+                                if (!value.includes('@')) return 'Please enter a valid email address';
+                                return null;
+                              }
+                            }}
+                            required
+                          />
+
+                          <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-2">
+                              Bio
+                            </label>
+                            <textarea
+                              value={formData.bio}
+                              onChange={(e) => handleInputChange('bio', e.target.value)}
+                              rows={5}
+                              className="w-full px-4 py-3 bg-dark-800 border border-dark-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none transition-all"
+                              placeholder="Tell us about yourself..."
+                              maxLength={500}
+                            />
+                            <div className="flex justify-between items-center mt-2">
+                              <p className="text-xs text-gray-500">
+                                Share your interests and learning goals
+                              </p>
+                              <span className={`text-xs font-medium ${
+                                formData.bio.length > 450 ? 'text-yellow-400' : 'text-gray-400'
+                              }`}>
+                                {formData.bio.length}/500
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Wallet Address Section */}
+                      <div className="bg-dark-700/50 border border-dark-600 rounded-xl p-6">
+                        <div className="flex items-center space-x-3 mb-4">
+                          <div className="p-2 bg-primary-500/20 rounded-lg">
+                            <Wallet className="w-5 h-5 text-primary-400" />
+                          </div>
+                          <div>
+                            <h3 className="text-lg font-semibold text-white">Algorand Wallet</h3>
+                            <p className="text-sm text-gray-400">Your connected wallet address</p>
+                          </div>
+                        </div>
+                        <div className="relative">
+                          <label className="block text-sm font-medium text-gray-300 mb-2">
+                            Wallet Address
+                          </label>
+                          <input
+                            type="text"
+                            value={address || 'Not connected'}
+                            readOnly
+                            disabled
+                            className="w-full px-4 py-3 bg-dark-800 border border-dark-600 rounded-lg text-gray-300 font-mono text-sm cursor-not-allowed"
+                            placeholder="Connect wallet to see address"
+                          />
+                          {isConnected && address && (
+                            <p className="mt-3 text-xs text-green-400 flex items-center">
+                              <CheckCircle2 className="w-4 h-4 mr-2" />
+                              Wallet successfully connected and verified
+                            </p>
+                          )}
+                          {!isConnected && (
+                            <p className="mt-3 text-xs text-yellow-400 flex items-center">
+                              <AlertCircle className="w-4 h-4 mr-2" />
+                              Please connect your wallet from the navigation bar
+                            </p>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>

@@ -13,7 +13,7 @@ import { storage } from '../utils/storage';
  */
 const Navbar = React.memo(() => {
   const location = useLocation();
-  const { isConnected, disconnect } = useWallet();
+  const { isConnected, disconnect, address } = useWallet();
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
   const profileMenuRef = useRef<HTMLDivElement>(null);
@@ -193,6 +193,14 @@ const Navbar = React.memo(() => {
                             </div>
                           </div>
                           
+                          {/* Wallet Address */}
+                          {address && (
+                            <div className="mt-3 p-2 bg-dark-700 rounded-lg">
+                              <p className="text-xs text-gray-400 mb-1">Wallet Address</p>
+                              <p className="font-mono text-xs text-primary-400 break-all">{address}</p>
+                            </div>
+                          )}
+                          
                           {/* XP Progress Bar */}
                           <div className="mt-3">
                             <div className="flex justify-between text-xs text-gray-400 mb-1">
@@ -247,8 +255,6 @@ const Navbar = React.memo(() => {
               <WalletConnect />
             )}
           </div>
-
-          <WalletConnect />
         </div>
       </div>
 
