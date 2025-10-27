@@ -1,5 +1,5 @@
 // AlgoZombies - Educational platform for Algorand development
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Zap, BookOpen, Home, Info, User, Settings, LogOut, ChevronDown, Trophy, Heart, Sun, Moon } from 'lucide-react';
@@ -11,12 +11,17 @@ import { storage } from '../utils/storage';
  * Navigation bar component for the AlgoZombies application
  * Features responsive design with wallet connection integration and user profile menu
  */
-const Navbar = React.memo(() => {
+const Navbar = () => {
   const location = useLocation();
   const { isConnected, disconnect, address } = useWallet();
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
   const profileMenuRef = useRef<HTMLDivElement>(null);
+
+  // Debug: Log connection state changes
+  useEffect(() => {
+    console.log('Navbar - Connection state changed:', { isConnected, address });
+  }, [isConnected, address]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -296,7 +301,7 @@ const Navbar = React.memo(() => {
       </div>
     </nav>
   );
-});
+};
 
 Navbar.displayName = 'Navbar';
 
