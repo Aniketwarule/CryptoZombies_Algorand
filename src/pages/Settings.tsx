@@ -15,7 +15,6 @@ const Settings = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   
-  // Profile form state
   const [profileData, setProfileData] = useState({
     username: 'AlgoLearner',
     email: 'user@example.com',
@@ -24,11 +23,9 @@ const Settings = () => {
   });
 
   useEffect(() => {
-    // Simulate loading settings from storage
     const loadSettings = async () => {
       setIsLoading(true);
       try {
-        // Simulate API call delay
         await new Promise(resolve => setTimeout(resolve, 800));
         
         const savedTheme = storage.get('algozombies-theme') || 'dark';
@@ -44,12 +41,10 @@ const Settings = () => {
   const handleThemeChange = async (themeName: ThemeName) => {
     setIsSaving(true);
     try {
-      // Simulate saving delay
       await new Promise(resolve => setTimeout(resolve, 500));
       
       setCurrentTheme(themeName);
       storage.set('algozombies-theme', themeName);
-      // Apply theme changes to document
       document.documentElement.setAttribute('data-theme', themeName);
     } finally {
       setIsSaving(false);
@@ -305,7 +300,6 @@ const Settings = () => {
             )}
           </h1>
 
-          {/* Theme Customizer */}
           <ThemeCustomizer
             currentTheme={currentTheme}
             onThemeChange={handleThemeChange}
