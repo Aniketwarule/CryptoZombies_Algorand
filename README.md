@@ -29,6 +29,18 @@ graph TB
     F --> A
 ```
 
+💡 Vision & Mission
+
+Vision: To make blockchain education as addictive as gaming and as accessible as open-source learning.
+
+Mission:
+
+Empower developers to master Algorand smart contract development through play.
+
+Build a global learning community that grows with every completed challenge.
+
+Lower the entry barrier for blockchain devs by turning complexity into creativity.
+
 ## ✨ Features
 
 ### 🎓 Learning Experience
