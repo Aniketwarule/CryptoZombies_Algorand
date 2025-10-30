@@ -1,4 +1,3 @@
-// AlgoZombies - Educational platform for Algorand development
 import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -7,10 +6,7 @@ import WalletConnect from './WalletConnect';
 import { useWallet } from '../hooks/useWallet';
 import { storage } from '../utils/storage';
 
-/**
- * Navigation bar component for the AlgoZombies application
- * Features responsive design with wallet connection integration and user profile menu
- */
+
 const Navbar = () => {
   const location = useLocation();
   const { isConnected, disconnect, address } = useWallet();
@@ -34,13 +30,11 @@ const Navbar = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Initialize dark mode from storage
   useEffect(() => {
     const savedTheme = storage.get('algozombies-theme');
     const isDark = savedTheme !== 'light';
     setIsDarkMode(isDark);
     
-    // Apply theme to document
     if (isDark) {
       document.documentElement.classList.add('dark');
       document.documentElement.setAttribute('data-theme', 'dark');
@@ -54,7 +48,6 @@ const Navbar = () => {
     const newMode = !isDarkMode;
     setIsDarkMode(newMode);
     
-    // Save to storage and apply to document
     const theme = newMode ? 'dark' : 'light';
     storage.set('algozombies-theme', theme);
     
@@ -67,7 +60,6 @@ const Navbar = () => {
     }
   };
 
-  // Mock user data - in real app this would come from context or API
   const userData = {
     username: 'AlgoLearner',
     level: 5,
@@ -75,10 +67,9 @@ const Navbar = () => {
     nextLevelXp: 1500,
     streak: 7,
     completedLessons: 12,
-    avatar: null, // Would be avatar URL in real app
+    avatar: null,
   };
 
-  // Navigation menu items configuration
   const navItems = [
     { path: '/', icon: Home, label: 'Dashboard' },
     { path: '/lessons', icon: BookOpen, label: 'Lessons' },
@@ -124,9 +115,7 @@ const Navbar = () => {
             })}
           </div>
 
-          {/* Right side - Profile and Wallet */}
           <div className="flex items-center space-x-4">
-            {/* Dark Mode Toggle */}
             <motion.button
               onClick={toggleDarkMode}
               className="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors"
@@ -149,7 +138,6 @@ const Navbar = () => {
 
             {isConnected ? (
               <div className="flex items-center space-x-4">
-                {/* User Stats Quick View */}
                 <div className="hidden lg:flex items-center space-x-4 text-sm">
                   <div className="flex items-center space-x-1">
                     <Trophy className="h-4 w-4 text-yellow-500" />
