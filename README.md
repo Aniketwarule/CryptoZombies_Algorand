@@ -141,25 +141,6 @@ npm run dev
 | `npm run preview` | Preview production build |
 | `npm run type-check` | TypeScript validation |
 
-## 📚 Learning Path
-
-### Journey Overview
-```mermaid
-journey
-    title AlgoZombies Learning Journey
-    section Foundation: 25%
-      Learn Algorand Basics: 5: Learner
-      First PyTeal Contract: 5: Developer
-    section Intermediate: 50%
-      Algorand Standard Assets: 4: Builder
-      Zombie Game Mechanics: 4: Creator
-    section Advanced: 75%
-      Smart Contract Patterns: 3: Architect
-      Security Best Practices: 3: Expert
-    section Mastery: 100%
-      DApp Integration: 5: Master
-      Real Project Deployment: 5: Algorand Pro
-```
 
 ### Curriculum Details
 
