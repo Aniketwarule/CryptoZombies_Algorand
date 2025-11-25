@@ -1,0 +1,1790 @@
+#pragma version 11
+#pragma typetrack false
+
+// @algorandfoundation/algorand-typescript/arc4/index.d.ts::Contract.approvalProgram() -> uint64:
+main:
+    intcblock 0 1 8 32 10000 100000 50000 75000
+    bytecblock 0x151f7c7580 "totalLessons" "uzc_" "totalUsers" "totalZombies" "rewardPerLesson" "contractOwner" "utr_" "urc_" 0x151f7c75 "ureg_" "zwc_" "ucl_" "uts_" "ula_" "zn_" "zl_" "zlc_" 0x068101 "zd_" "zca_" "lc_"
+    txn ApplicationID
+    bnz main_after_if_else@2
+    // smart_contracts/zombies_contract/contract.algo.ts:26
+    // public totalUsers = GlobalState<uint64>({ initialValue: Uint64(0) });
+    bytec_3 // "totalUsers"
+    intc_0 // 0
+    app_global_put
+    // smart_contracts/zombies_contract/contract.algo.ts:27
+    // public totalZombies = GlobalState<uint64>({ initialValue: Uint64(0) });
+    bytec 4 // "totalZombies"
+    intc_0 // 0
+    app_global_put
+    // smart_contracts/zombies_contract/contract.algo.ts:29
+    // public totalLessons = GlobalState<uint64>({ initialValue: Uint64(50) });
+    bytec_1 // "totalLessons"
+    pushint 50 // 50
+    app_global_put
+    // smart_contracts/zombies_contract/contract.algo.ts:30
+    // public rewardPerLesson = GlobalState<uint64>({ initialValue: Uint64(100_000) }); // 0.1 ALGO
+    bytec 5 // "rewardPerLesson"
+    intc 5 // 100000
+    app_global_put
+
+main_after_if_else@2:
+    // smart_contracts/zombies_contract/contract.algo.ts:24
+    // export class AlgoZombiesContract extends Contract {
+    txn OnCompletion
+    !
+    assert // OnCompletion must be NoOp
+    txn ApplicationID
+    bz main_create_NoOp@21
+    pushbytess 0xc9db2fa6 0x0c411064 0x694b0188 0x7e566aba 0x77ce4f97 0xafdaf00e 0xc2938687 0xd1c06445 0xf38ac8a8 0xddab43b3 0x39209324 0xcc60be22 0x88bec07e 0x1088a396 0x7cf9f399 // method "registerUser()bool", method "createZombie(byte[],uint64)bool", method "completeLesson(uint64,uint64)bool", method "levelUpZombie(uint64)bool", method "recordBattle(uint64,bool)bool", method "renameZombie(uint64,byte[])bool", method "getUserStats(address)(uint64,uint64,uint64,uint64,uint64,uint64)", method "getZombie(address,uint64)(byte[],uint64,uint64,uint64,uint64,uint64)", method "isLessonCompleted(address,uint64)bool", method "getContractStats()(uint64,uint64,uint64,uint64)", method "isUserRegistered(address)bool", method "updateRewardPerLesson(uint64)bool", method "updateTotalLessons(uint64)bool", method "fundContract()bool", method "emergencyWithdraw(uint64)bool"
+    txna ApplicationArgs 0
+    match registerUser createZombie completeLesson levelUpZombie recordBattle renameZombie getUserStats getZombie isLessonCompleted getContractStats isUserRegistered updateRewardPerLesson updateTotalLessons fundContract emergencyWithdraw
+    err
+
+main_create_NoOp@21:
+    // smart_contracts/zombies_contract/contract.algo.ts:24
+    // export class AlgoZombiesContract extends Contract {
+    pushbytes 0xb8447b36 // method "createApplication()void"
+    txna ApplicationArgs 0
+    match createApplication
+    err
+
+
+// _puya_lib.util.ensure_budget(required_budget: uint64, fee_source: uint64) -> void:
+ensure_budget:
+    proto 2 0
+    frame_dig -2
+    pushint 10 // 10
+    +
+
+ensure_budget_while_top@1:
+    frame_dig 0
+    global OpcodeBudget
+    >
+    bz ensure_budget_after_while@6
+    itxn_begin
+    pushint 6 // appl
+    itxn_field TypeEnum
+    pushint 5 // DeleteApplication
+    itxn_field OnCompletion
+    bytec 18 // 0x068101
+    itxn_field ApprovalProgram
+    bytec 18 // 0x068101
+    itxn_field ClearStateProgram
+    frame_dig -1
+    switch ensure_budget_switch_case_0@3 ensure_budget_switch_case_1@4
+
+ensure_budget_switch_case_next@5:
+    itxn_submit
+    b ensure_budget_while_top@1
+
+ensure_budget_switch_case_1@4:
+    global MinTxnFee
+    itxn_field Fee
+    b ensure_budget_switch_case_next@5
+
+ensure_budget_switch_case_0@3:
+    intc_0 // 0
+    itxn_field Fee
+    b ensure_budget_switch_case_next@5
+
+ensure_budget_after_while@6:
+    retsub
+
+
+// smart_contracts/zombies_contract/contract.algo.ts::AlgoZombiesContract.createApplication[routing]() -> void:
+createApplication:
+    // smart_contracts/zombies_contract/contract.algo.ts:28
+    // public contractOwner = GlobalState<Account>();
+    bytec 6 // "contractOwner"
+    // smart_contracts/zombies_contract/contract.algo.ts:104
+    // this.contractOwner.value = Txn.sender;
+    txn Sender
+    app_global_put
+    // smart_contracts/zombies_contract/contract.algo.ts:26
+    // public totalUsers = GlobalState<uint64>({ initialValue: Uint64(0) });
+    bytec_3 // "totalUsers"
+    // smart_contracts/zombies_contract/contract.algo.ts:105
+    // this.totalUsers.value = Uint64(0);
+    intc_0 // 0
+    app_global_put
+    // smart_contracts/zombies_contract/contract.algo.ts:27
+    // public totalZombies = GlobalState<uint64>({ initialValue: Uint64(0) });
+    bytec 4 // "totalZombies"
+    // smart_contracts/zombies_contract/contract.algo.ts:106
+    // this.totalZombies.value = Uint64(0);
+    intc_0 // 0
+    app_global_put
+    // smart_contracts/zombies_contract/contract.algo.ts:29
+    // public totalLessons = GlobalState<uint64>({ initialValue: Uint64(50) });
+    bytec_1 // "totalLessons"
+    // smart_contracts/zombies_contract/contract.algo.ts:107
+    // this.totalLessons.value = Uint64(50);
+    pushint 50 // 50
+    app_global_put
+    // smart_contracts/zombies_contract/contract.algo.ts:30
+    // public rewardPerLesson = GlobalState<uint64>({ initialValue: Uint64(100_000) }); // 0.1 ALGO
+    bytec 5 // "rewardPerLesson"
+    // smart_contracts/zombies_contract/contract.algo.ts:108
+    // this.rewardPerLesson.value = Uint64(100_000); // 0.1 ALGO in microAlgos
+    intc 5 // 100000
+    app_global_put
+    // smart_contracts/zombies_contract/contract.algo.ts:103
+    // public createApplication(): void {
+    intc_1 // 1
+    return
+
+
+// smart_contracts/zombies_contract/contract.algo.ts::AlgoZombiesContract.registerUser[routing]() -> void:
+registerUser:
+    // smart_contracts/zombies_contract/contract.algo.ts:116
+    // ensureBudget(10000);
+    intc 4 // 10000
+    intc_0 // 0
+    callsub ensure_budget
+    // smart_contracts/zombies_contract/contract.algo.ts:118
+    // const userKey: bytes = this.getUserKey(Txn.sender);
+    txn Sender
+    // smart_contracts/zombies_contract/contract.algo.ts:39
+    // public userRegistered = BoxMap<bytes, uint64>({ keyPrefix: Bytes`ureg_` });
+    bytec 10 // "ureg_"
+    // smart_contracts/zombies_contract/contract.algo.ts:118
+    // const userKey: bytes = this.getUserKey(Txn.sender);
+    txn Sender
+    // smart_contracts/zombies_contract/contract.algo.ts:39
+    // public userRegistered = BoxMap<bytes, uint64>({ keyPrefix: Bytes`ureg_` });
+    concat
+    dup
+    // smart_contracts/zombies_contract/contract.algo.ts:121
+    // assert(!this.userRegistered(userKey).exists || this.userRegistered(userKey).value === Uint64(0), "User already registered");
+    box_len
+    bury 1
+    bz registerUser_bool_true@3
+    dup
+    box_get
+    assert // Box must have value
+    btoi
+    bnz registerUser_bool_false@4
+
+registerUser_bool_true@3:
+    intc_1 // 1
+
+registerUser_bool_merge@5:
+    // smart_contracts/zombies_contract/contract.algo.ts:121
+    // assert(!this.userRegistered(userKey).exists || this.userRegistered(userKey).value === Uint64(0), "User already registered");
+    assert // User already registered
+    // smart_contracts/zombies_contract/contract.algo.ts:124
+    // this.userRegistered(userKey).value = Uint64(1);
+    intc_1 // 1
+    itob
+    dup2
+    box_put
+    // smart_contracts/zombies_contract/contract.algo.ts:34
+    // public userZombieCount = BoxMap<bytes, uint64>({ keyPrefix: Bytes`uzc_` });
+    bytec_2 // "uzc_"
+    dig 3
+    dup
+    cover 2
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:125
+    // this.userZombieCount(userKey).value = Uint64(0);
+    intc_0 // 0
+    itob
+    swap
+    dig 1
+    box_put
+    // smart_contracts/zombies_contract/contract.algo.ts:35
+    // public userCurrentLesson = BoxMap<bytes, uint64>({ keyPrefix: Bytes`ucl_` });
+    bytec 12 // "ucl_"
+    dig 2
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:126
+    // this.userCurrentLesson(userKey).value = Uint64(1);
+    uncover 3
+    box_put
+    // smart_contracts/zombies_contract/contract.algo.ts:36
+    // public userTotalScore = BoxMap<bytes, uint64>({ keyPrefix: Bytes`uts_` });
+    bytec 13 // "uts_"
+    dig 2
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:127
+    // this.userTotalScore(userKey).value = Uint64(0);
+    dig 1
+    box_put
+    // smart_contracts/zombies_contract/contract.algo.ts:128
+    // this.userLastActive(userKey).value = Global.latestTimestamp;
+    global LatestTimestamp
+    // smart_contracts/zombies_contract/contract.algo.ts:37
+    // public userLastActive = BoxMap<bytes, uint64>({ keyPrefix: Bytes`ula_` });
+    bytec 14 // "ula_"
+    dig 3
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:128
+    // this.userLastActive(userKey).value = Global.latestTimestamp;
+    swap
+    itob
+    box_put
+    // smart_contracts/zombies_contract/contract.algo.ts:38
+    // public userTotalRewards = BoxMap<bytes, uint64>({ keyPrefix: Bytes`utr_` });
+    bytec 7 // "utr_"
+    dig 2
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:129
+    // this.userTotalRewards(userKey).value = Uint64(0);
+    dig 1
+    box_put
+    // smart_contracts/zombies_contract/contract.algo.ts:54
+    // public userRewardCount = BoxMap<bytes, uint64>({ keyPrefix: Bytes`urc_` });
+    bytec 8 // "urc_"
+    uncover 2
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:130
+    // this.userRewardCount(userKey).value = Uint64(0);
+    swap
+    box_put
+    // smart_contracts/zombies_contract/contract.algo.ts:133
+    // this.totalUsers.value = this.totalUsers.value + Uint64(1);
+    intc_0 // 0
+    // smart_contracts/zombies_contract/contract.algo.ts:26
+    // public totalUsers = GlobalState<uint64>({ initialValue: Uint64(0) });
+    bytec_3 // "totalUsers"
+    // smart_contracts/zombies_contract/contract.algo.ts:133
+    // this.totalUsers.value = this.totalUsers.value + Uint64(1);
+    app_global_get_ex
+    assert // check GlobalState exists
+    intc_1 // 1
+    +
+    // smart_contracts/zombies_contract/contract.algo.ts:26
+    // public totalUsers = GlobalState<uint64>({ initialValue: Uint64(0) });
+    bytec_3 // "totalUsers"
+    // smart_contracts/zombies_contract/contract.algo.ts:133
+    // this.totalUsers.value = this.totalUsers.value + Uint64(1);
+    swap
+    app_global_put
+    // smart_contracts/zombies_contract/contract.algo.ts:115
+    // public registerUser(): boolean {
+    bytec_0 // 0x151f7c7580
+    log
+    intc_1 // 1
+    return
+
+registerUser_bool_false@4:
+    intc_0 // 0
+    b registerUser_bool_merge@5
+
+
+// smart_contracts/zombies_contract/contract.algo.ts::AlgoZombiesContract.createZombie[routing]() -> void:
+createZombie:
+    // smart_contracts/zombies_contract/contract.algo.ts:141
+    // public createZombie(name: bytes, dna: uint64): boolean {
+    txna ApplicationArgs 1
+    dup
+    intc_0 // 0
+    extract_uint16 // on error: invalid array length header
+    pushint 2 // 2
+    +
+    dig 1
+    len
+    ==
+    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
+    extract 2 0
+    txna ApplicationArgs 2
+    dup
+    len
+    intc_2 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    // smart_contracts/zombies_contract/contract.algo.ts:142
+    // ensureBudget(10000);
+    intc 4 // 10000
+    intc_0 // 0
+    callsub ensure_budget
+    // smart_contracts/zombies_contract/contract.algo.ts:144
+    // this.assertUserRegistered(Txn.sender);
+    txn Sender
+    callsub assertUserRegistered
+    // smart_contracts/zombies_contract/contract.algo.ts:34
+    // public userZombieCount = BoxMap<bytes, uint64>({ keyPrefix: Bytes`uzc_` });
+    bytec_2 // "uzc_"
+    // smart_contracts/zombies_contract/contract.algo.ts:146
+    // const userKey: bytes = this.getUserKey(Txn.sender);
+    txn Sender
+    // smart_contracts/zombies_contract/contract.algo.ts:34
+    // public userZombieCount = BoxMap<bytes, uint64>({ keyPrefix: Bytes`uzc_` });
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:147
+    // const zombieIndex: uint64 = this.userZombieCount(userKey).value;
+    dup
+    box_get
+    assert // Box must have value
+    btoi
+    // smart_contracts/zombies_contract/contract.algo.ts:148
+    // const zombieKey: bytes = this.getZombieKey(Txn.sender, zombieIndex);
+    txn Sender
+    // smart_contracts/zombies_contract/contract.algo.ts:70
+    // return account.bytes.concat(itob(zombieIndex));
+    dig 1
+    itob
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:151
+    // assert(dna > Uint64(0), "DNA must be positive");
+    dig 3
+    assert // DNA must be positive
+    // smart_contracts/zombies_contract/contract.algo.ts:152
+    // assert(name.length > 0, "Name cannot be empty");
+    dig 4
+    len
+    dup
+    assert // Name cannot be empty
+    // smart_contracts/zombies_contract/contract.algo.ts:153
+    // assert(name.length <= 32, "Name too long (max 32 bytes)");
+    intc_3 // 32
+    <=
+    assert // Name too long (max 32 bytes)
+    // smart_contracts/zombies_contract/contract.algo.ts:43
+    // public zombieName = BoxMap<bytes, bytes>({ keyPrefix: Bytes`zn_` });
+    bytec 15 // "zn_"
+    dig 1
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:156
+    // this.zombieName(zombieKey).value = name;
+    dup
+    box_del
+    pop
+    uncover 5
+    box_put
+    // smart_contracts/zombies_contract/contract.algo.ts:44
+    // public zombieLevel = BoxMap<bytes, uint64>({ keyPrefix: Bytes`zl_` });
+    bytec 16 // "zl_"
+    dig 1
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:157
+    // this.zombieLevel(zombieKey).value = Uint64(1);
+    intc_1 // 1
+    itob
+    box_put
+    // smart_contracts/zombies_contract/contract.algo.ts:45
+    // public zombieDna = BoxMap<bytes, uint64>({ keyPrefix: Bytes`zd_` });
+    bytec 19 // "zd_"
+    dig 1
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:158
+    // this.zombieDna(zombieKey).value = dna;
+    uncover 4
+    itob
+    box_put
+    // smart_contracts/zombies_contract/contract.algo.ts:46
+    // public zombieWinCount = BoxMap<bytes, uint64>({ keyPrefix: Bytes`zwc_` });
+    bytec 11 // "zwc_"
+    dig 1
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:159
+    // this.zombieWinCount(zombieKey).value = Uint64(0);
+    intc_0 // 0
+    itob
+    swap
+    dig 1
+    box_put
+    // smart_contracts/zombies_contract/contract.algo.ts:47
+    // public zombieLossCount = BoxMap<bytes, uint64>({ keyPrefix: Bytes`zlc_` });
+    bytec 17 // "zlc_"
+    dig 2
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:160
+    // this.zombieLossCount(zombieKey).value = Uint64(0);
+    swap
+    box_put
+    // smart_contracts/zombies_contract/contract.algo.ts:161
+    // this.zombieCreatedAt(zombieKey).value = Global.latestTimestamp;
+    global LatestTimestamp
+    // smart_contracts/zombies_contract/contract.algo.ts:48
+    // public zombieCreatedAt = BoxMap<bytes, uint64>({ keyPrefix: Bytes`zca_` });
+    bytec 20 // "zca_"
+    uncover 2
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:161
+    // this.zombieCreatedAt(zombieKey).value = Global.latestTimestamp;
+    swap
+    itob
+    box_put
+    // smart_contracts/zombies_contract/contract.algo.ts:164
+    // this.userZombieCount(userKey).value = zombieIndex + Uint64(1);
+    intc_1 // 1
+    +
+    itob
+    box_put
+    // smart_contracts/zombies_contract/contract.algo.ts:165
+    // this.totalZombies.value = this.totalZombies.value + Uint64(1);
+    intc_0 // 0
+    // smart_contracts/zombies_contract/contract.algo.ts:27
+    // public totalZombies = GlobalState<uint64>({ initialValue: Uint64(0) });
+    bytec 4 // "totalZombies"
+    // smart_contracts/zombies_contract/contract.algo.ts:165
+    // this.totalZombies.value = this.totalZombies.value + Uint64(1);
+    app_global_get_ex
+    assert // check GlobalState exists
+    intc_1 // 1
+    +
+    // smart_contracts/zombies_contract/contract.algo.ts:27
+    // public totalZombies = GlobalState<uint64>({ initialValue: Uint64(0) });
+    bytec 4 // "totalZombies"
+    // smart_contracts/zombies_contract/contract.algo.ts:165
+    // this.totalZombies.value = this.totalZombies.value + Uint64(1);
+    swap
+    app_global_put
+    // smart_contracts/zombies_contract/contract.algo.ts:167
+    // this.updateLastActive(Txn.sender);
+    txn Sender
+    callsub updateLastActive
+    // smart_contracts/zombies_contract/contract.algo.ts:141
+    // public createZombie(name: bytes, dna: uint64): boolean {
+    bytec_0 // 0x151f7c7580
+    log
+    intc_1 // 1
+    return
+
+
+// smart_contracts/zombies_contract/contract.algo.ts::AlgoZombiesContract.completeLesson[routing]() -> void:
+completeLesson:
+    // smart_contracts/zombies_contract/contract.algo.ts:175
+    // public completeLesson(lessonId: uint64, score: uint64): boolean {
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_2 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    txna ApplicationArgs 2
+    dup
+    len
+    intc_2 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    dup
+    uncover 2
+    // smart_contracts/zombies_contract/contract.algo.ts:176
+    // ensureBudget(10000);
+    intc 4 // 10000
+    intc_0 // 0
+    callsub ensure_budget
+    // smart_contracts/zombies_contract/contract.algo.ts:178
+    // this.assertUserRegistered(Txn.sender);
+    txn Sender
+    callsub assertUserRegistered
+    // smart_contracts/zombies_contract/contract.algo.ts:180
+    // const userKey: bytes = this.getUserKey(Txn.sender);
+    txn Sender
+    dup
+    cover 3
+    // smart_contracts/zombies_contract/contract.algo.ts:35
+    // public userCurrentLesson = BoxMap<bytes, uint64>({ keyPrefix: Bytes`ucl_` });
+    bytec 12 // "ucl_"
+    swap
+    concat
+    dup
+    cover 3
+    // smart_contracts/zombies_contract/contract.algo.ts:181
+    // const currentLesson: uint64 = this.userCurrentLesson(userKey).value;
+    box_get
+    assert // Box must have value
+    btoi
+    dup
+    cover 3
+    // smart_contracts/zombies_contract/contract.algo.ts:182
+    // const lessonKey: bytes = this.getLessonKey(Txn.sender, lessonId);
+    txn Sender
+    // smart_contracts/zombies_contract/contract.algo.ts:78
+    // return account.bytes.concat(itob(lessonId));
+    dig 2
+    itob
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:185
+    // assert(lessonId === currentLesson, "Complete lessons in order");
+    dig 2
+    uncover 2
+    ==
+    assert // Complete lessons in order
+    // smart_contracts/zombies_contract/contract.algo.ts:186
+    // assert(lessonId <= this.totalLessons.value, "Invalid lesson ID");
+    intc_0 // 0
+    // smart_contracts/zombies_contract/contract.algo.ts:29
+    // public totalLessons = GlobalState<uint64>({ initialValue: Uint64(50) });
+    bytec_1 // "totalLessons"
+    // smart_contracts/zombies_contract/contract.algo.ts:186
+    // assert(lessonId <= this.totalLessons.value, "Invalid lesson ID");
+    app_global_get_ex
+    assert // check GlobalState exists
+    uncover 2
+    >=
+    assert // Invalid lesson ID
+    // smart_contracts/zombies_contract/contract.algo.ts:187
+    // assert(score > Uint64(0), "Score must be positive");
+    dig 1
+    assert // Score must be positive
+    // smart_contracts/zombies_contract/contract.algo.ts:188
+    // assert(score <= Uint64(100), "Score cannot exceed 100");
+    swap
+    pushint 100 // 100
+    <=
+    assert // Score cannot exceed 100
+    // smart_contracts/zombies_contract/contract.algo.ts:51
+    // public lessonCompleted = BoxMap<bytes, uint64>({ keyPrefix: Bytes`lc_` });
+    bytec 21 // "lc_"
+    swap
+    concat
+    dup
+    // smart_contracts/zombies_contract/contract.algo.ts:191
+    // assert(!this.lessonCompleted(lessonKey).exists || this.lessonCompleted(lessonKey).value === Uint64(0), "Lesson already completed");
+    box_len
+    bury 1
+    bz completeLesson_bool_true@3
+    dup
+    box_get
+    assert // Box must have value
+    btoi
+    bnz completeLesson_bool_false@4
+
+completeLesson_bool_true@3:
+    intc_1 // 1
+
+completeLesson_bool_merge@5:
+    // smart_contracts/zombies_contract/contract.algo.ts:191
+    // assert(!this.lessonCompleted(lessonKey).exists || this.lessonCompleted(lessonKey).value === Uint64(0), "Lesson already completed");
+    assert // Lesson already completed
+    // smart_contracts/zombies_contract/contract.algo.ts:194
+    // this.lessonCompleted(lessonKey).value = Uint64(1);
+    intc_1 // 1
+    itob
+    dig 1
+    swap
+    box_put
+    // smart_contracts/zombies_contract/contract.algo.ts:197
+    // this.userCurrentLesson(userKey).value = currentLesson + Uint64(1);
+    dig 1
+    intc_1 // 1
+    +
+    itob
+    dig 3
+    swap
+    box_put
+    // smart_contracts/zombies_contract/contract.algo.ts:36
+    // public userTotalScore = BoxMap<bytes, uint64>({ keyPrefix: Bytes`uts_` });
+    bytec 13 // "uts_"
+    dig 4
+    dup
+    cover 2
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:198
+    // this.userTotalScore(userKey).value = this.userTotalScore(userKey).value + score;
+    dup
+    box_get
+    assert // Box must have value
+    btoi
+    dig 7
+    dup
+    cover 3
+    +
+    itob
+    box_put
+    // smart_contracts/zombies_contract/contract.algo.ts:201
+    // const rewardAmount: uint64 = (this.rewardPerLesson.value * score) / Uint64(100);
+    intc_0 // 0
+    // smart_contracts/zombies_contract/contract.algo.ts:30
+    // public rewardPerLesson = GlobalState<uint64>({ initialValue: Uint64(100_000) }); // 0.1 ALGO
+    bytec 5 // "rewardPerLesson"
+    // smart_contracts/zombies_contract/contract.algo.ts:201
+    // const rewardAmount: uint64 = (this.rewardPerLesson.value * score) / Uint64(100);
+    app_global_get_ex
+    assert // check GlobalState exists
+    *
+    pushint 100 // 100
+    /
+    // smart_contracts/zombies_contract/contract.algo.ts:38
+    // public userTotalRewards = BoxMap<bytes, uint64>({ keyPrefix: Bytes`utr_` });
+    bytec 7 // "utr_"
+    dig 2
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:204
+    // this.userTotalRewards(userKey).value = this.userTotalRewards(userKey).value + rewardAmount;
+    dup
+    box_get
+    assert // Box must have value
+    btoi
+    dig 2
+    +
+    itob
+    box_put
+    // smart_contracts/zombies_contract/contract.algo.ts:54
+    // public userRewardCount = BoxMap<bytes, uint64>({ keyPrefix: Bytes`urc_` });
+    bytec 8 // "urc_"
+    uncover 2
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:205
+    // this.userRewardCount(userKey).value = this.userRewardCount(userKey).value + Uint64(1);
+    dup
+    box_get
+    assert // Box must have value
+    btoi
+    intc_1 // 1
+    +
+    itob
+    box_put
+    // smart_contracts/zombies_contract/contract.algo.ts:208-213
+    // itxn
+    //   .payment({
+    //     receiver: Txn.sender,
+    //     amount: rewardAmount,
+    //   })
+    //   .submit();
+    itxn_begin
+    // smart_contracts/zombies_contract/contract.algo.ts:210
+    // receiver: Txn.sender,
+    txn Sender
+    itxn_field Receiver
+    itxn_field Amount
+    // smart_contracts/zombies_contract/contract.algo.ts:208-212
+    // itxn
+    //   .payment({
+    //     receiver: Txn.sender,
+    //     amount: rewardAmount,
+    //   })
+    intc_1 // 1
+    itxn_field TypeEnum
+    intc_0 // 0
+    itxn_field Fee
+    // smart_contracts/zombies_contract/contract.algo.ts:208-213
+    // itxn
+    //   .payment({
+    //     receiver: Txn.sender,
+    //     amount: rewardAmount,
+    //   })
+    //   .submit();
+    itxn_submit
+    // smart_contracts/zombies_contract/contract.algo.ts:215
+    // this.updateLastActive(Txn.sender);
+    txn Sender
+    callsub updateLastActive
+    // smart_contracts/zombies_contract/contract.algo.ts:175
+    // public completeLesson(lessonId: uint64, score: uint64): boolean {
+    bytec_0 // 0x151f7c7580
+    log
+    intc_1 // 1
+    return
+
+completeLesson_bool_false@4:
+    intc_0 // 0
+    b completeLesson_bool_merge@5
+
+
+// smart_contracts/zombies_contract/contract.algo.ts::AlgoZombiesContract.levelUpZombie[routing]() -> void:
+levelUpZombie:
+    // smart_contracts/zombies_contract/contract.algo.ts:243
+    // public levelUpZombie(zombieIndex: uint64): boolean {
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_2 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    // smart_contracts/zombies_contract/contract.algo.ts:244
+    // ensureBudget(8000);
+    pushint 8000 // 8000
+    intc_0 // 0
+    callsub ensure_budget
+    // smart_contracts/zombies_contract/contract.algo.ts:246
+    // this.assertUserRegistered(Txn.sender);
+    txn Sender
+    callsub assertUserRegistered
+    // smart_contracts/zombies_contract/contract.algo.ts:248
+    // const userKey: bytes = this.getUserKey(Txn.sender);
+    txn Sender
+    // smart_contracts/zombies_contract/contract.algo.ts:34
+    // public userZombieCount = BoxMap<bytes, uint64>({ keyPrefix: Bytes`uzc_` });
+    bytec_2 // "uzc_"
+    dig 1
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:249
+    // const zombieCount: uint64 = this.userZombieCount(userKey).value;
+    box_get
+    assert // Box must have value
+    btoi
+    // smart_contracts/zombies_contract/contract.algo.ts:251
+    // assert(zombieIndex < zombieCount, "Invalid zombie index");
+    dig 2
+    >
+    assert // Invalid zombie index
+    // smart_contracts/zombies_contract/contract.algo.ts:253
+    // const zombieKey: bytes = this.getZombieKey(Txn.sender, zombieIndex);
+    txn Sender
+    // smart_contracts/zombies_contract/contract.algo.ts:70
+    // return account.bytes.concat(itob(zombieIndex));
+    uncover 2
+    itob
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:44
+    // public zombieLevel = BoxMap<bytes, uint64>({ keyPrefix: Bytes`zl_` });
+    bytec 16 // "zl_"
+    dig 1
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:254
+    // const currentLevel: uint64 = this.zombieLevel(zombieKey).value;
+    dup
+    box_get
+    assert // Box must have value
+    btoi
+    // smart_contracts/zombies_contract/contract.algo.ts:46
+    // public zombieWinCount = BoxMap<bytes, uint64>({ keyPrefix: Bytes`zwc_` });
+    bytec 11 // "zwc_"
+    uncover 3
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:255
+    // const winCount: uint64 = this.zombieWinCount(zombieKey).value;
+    box_get
+    assert // Box must have value
+    btoi
+    // smart_contracts/zombies_contract/contract.algo.ts:258
+    // const winsRequired: uint64 = currentLevel * Uint64(3); // 3 wins per level
+    dig 1
+    pushint 3 // 3
+    *
+    // smart_contracts/zombies_contract/contract.algo.ts:259
+    // assert(winCount >= winsRequired, "Not enough wins to level up");
+    >=
+    assert // Not enough wins to level up
+    // smart_contracts/zombies_contract/contract.algo.ts:262
+    // this.zombieLevel(zombieKey).value = currentLevel + Uint64(1);
+    intc_1 // 1
+    +
+    itob
+    box_put
+    // smart_contracts/zombies_contract/contract.algo.ts:38
+    // public userTotalRewards = BoxMap<bytes, uint64>({ keyPrefix: Bytes`utr_` });
+    bytec 7 // "utr_"
+    dig 1
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:268
+    // this.userTotalRewards(userKey).value = this.userTotalRewards(userKey).value + bonusReward;
+    dup
+    box_get
+    assert // Box must have value
+    btoi
+    intc 6 // 50000
+    +
+    itob
+    box_put
+    // smart_contracts/zombies_contract/contract.algo.ts:54
+    // public userRewardCount = BoxMap<bytes, uint64>({ keyPrefix: Bytes`urc_` });
+    bytec 8 // "urc_"
+    swap
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:269
+    // this.userRewardCount(userKey).value = this.userRewardCount(userKey).value + Uint64(1);
+    dup
+    box_get
+    assert // Box must have value
+    btoi
+    intc_1 // 1
+    +
+    itob
+    box_put
+    // smart_contracts/zombies_contract/contract.algo.ts:272-277
+    // itxn
+    //   .payment({
+    //     receiver: Txn.sender,
+    //     amount: bonusReward,
+    //   })
+    //   .submit();
+    itxn_begin
+    // smart_contracts/zombies_contract/contract.algo.ts:274
+    // receiver: Txn.sender,
+    txn Sender
+    // smart_contracts/zombies_contract/contract.algo.ts:275
+    // amount: bonusReward,
+    intc 6 // 50000
+    itxn_field Amount
+    itxn_field Receiver
+    // smart_contracts/zombies_contract/contract.algo.ts:272-276
+    // itxn
+    //   .payment({
+    //     receiver: Txn.sender,
+    //     amount: bonusReward,
+    //   })
+    intc_1 // 1
+    itxn_field TypeEnum
+    intc_0 // 0
+    itxn_field Fee
+    // smart_contracts/zombies_contract/contract.algo.ts:272-277
+    // itxn
+    //   .payment({
+    //     receiver: Txn.sender,
+    //     amount: bonusReward,
+    //   })
+    //   .submit();
+    itxn_submit
+    // smart_contracts/zombies_contract/contract.algo.ts:279
+    // this.updateLastActive(Txn.sender);
+    txn Sender
+    callsub updateLastActive
+    // smart_contracts/zombies_contract/contract.algo.ts:243
+    // public levelUpZombie(zombieIndex: uint64): boolean {
+    bytec_0 // 0x151f7c7580
+    log
+    intc_1 // 1
+    return
+
+
+// smart_contracts/zombies_contract/contract.algo.ts::AlgoZombiesContract.recordBattle[routing]() -> void:
+recordBattle:
+    // smart_contracts/zombies_contract/contract.algo.ts:287
+    // public recordBattle(zombieIndex: uint64, won: boolean): boolean {
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_2 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    txna ApplicationArgs 2
+    dup
+    len
+    intc_1 // 1
+    ==
+    assert // invalid number of bytes for arc4.bool
+    intc_0 // 0
+    getbit
+    // smart_contracts/zombies_contract/contract.algo.ts:288
+    // ensureBudget(8000);
+    pushint 8000 // 8000
+    intc_0 // 0
+    callsub ensure_budget
+    // smart_contracts/zombies_contract/contract.algo.ts:290
+    // this.assertUserRegistered(Txn.sender);
+    txn Sender
+    callsub assertUserRegistered
+    // smart_contracts/zombies_contract/contract.algo.ts:34
+    // public userZombieCount = BoxMap<bytes, uint64>({ keyPrefix: Bytes`uzc_` });
+    bytec_2 // "uzc_"
+    // smart_contracts/zombies_contract/contract.algo.ts:292
+    // const userKey: bytes = this.getUserKey(Txn.sender);
+    txn Sender
+    // smart_contracts/zombies_contract/contract.algo.ts:34
+    // public userZombieCount = BoxMap<bytes, uint64>({ keyPrefix: Bytes`uzc_` });
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:293
+    // const zombieCount: uint64 = this.userZombieCount(userKey).value;
+    box_get
+    assert // Box must have value
+    btoi
+    // smart_contracts/zombies_contract/contract.algo.ts:295
+    // assert(zombieIndex < zombieCount, "Invalid zombie index");
+    dig 2
+    >
+    assert // Invalid zombie index
+    // smart_contracts/zombies_contract/contract.algo.ts:297
+    // const zombieKey: bytes = this.getZombieKey(Txn.sender, zombieIndex);
+    txn Sender
+    // smart_contracts/zombies_contract/contract.algo.ts:70
+    // return account.bytes.concat(itob(zombieIndex));
+    uncover 2
+    itob
+    concat
+    swap
+    // smart_contracts/zombies_contract/contract.algo.ts:299
+    // if (won) {
+    bz recordBattle_else_body@5
+    // smart_contracts/zombies_contract/contract.algo.ts:46
+    // public zombieWinCount = BoxMap<bytes, uint64>({ keyPrefix: Bytes`zwc_` });
+    bytec 11 // "zwc_"
+    swap
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:301
+    // const currentWins: uint64 = this.zombieWinCount(zombieKey).value;
+    dup
+    box_get
+    assert // Box must have value
+    btoi
+    // smart_contracts/zombies_contract/contract.algo.ts:302
+    // this.zombieWinCount(zombieKey).value = currentWins + Uint64(1);
+    intc_1 // 1
+    +
+    dup
+    itob
+    uncover 2
+    swap
+    box_put
+    // smart_contracts/zombies_contract/contract.algo.ts:306
+    // if (newWins % Uint64(5) === Uint64(0)) {
+    pushint 5 // 5
+    %
+    bnz recordBattle_after_if_else@6
+    // smart_contracts/zombies_contract/contract.algo.ts:308
+    // this.awardReward(Txn.sender, milestoneReward);
+    txn Sender
+    // smart_contracts/zombies_contract/contract.algo.ts:38
+    // public userTotalRewards = BoxMap<bytes, uint64>({ keyPrefix: Bytes`utr_` });
+    bytec 7 // "utr_"
+    dig 1
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:228
+    // this.userTotalRewards(userKey).value = this.userTotalRewards(userKey).value + amount;
+    dup
+    box_get
+    assert // Box must have value
+    btoi
+    // smart_contracts/zombies_contract/contract.algo.ts:308
+    // this.awardReward(Txn.sender, milestoneReward);
+    intc 7 // 75000
+    // smart_contracts/zombies_contract/contract.algo.ts:228
+    // this.userTotalRewards(userKey).value = this.userTotalRewards(userKey).value + amount;
+    +
+    itob
+    box_put
+    // smart_contracts/zombies_contract/contract.algo.ts:54
+    // public userRewardCount = BoxMap<bytes, uint64>({ keyPrefix: Bytes`urc_` });
+    bytec 8 // "urc_"
+    dig 1
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:229
+    // this.userRewardCount(userKey).value = this.userRewardCount(userKey).value + Uint64(1);
+    dup
+    box_get
+    assert // Box must have value
+    btoi
+    intc_1 // 1
+    +
+    itob
+    box_put
+    // smart_contracts/zombies_contract/contract.algo.ts:232-237
+    // itxn
+    //   .payment({
+    //     receiver: user,
+    //     amount: amount,
+    //   })
+    //   .submit();
+    itxn_begin
+    // smart_contracts/zombies_contract/contract.algo.ts:308
+    // this.awardReward(Txn.sender, milestoneReward);
+    intc 7 // 75000
+    itxn_field Amount
+    itxn_field Receiver
+    // smart_contracts/zombies_contract/contract.algo.ts:232-236
+    // itxn
+    //   .payment({
+    //     receiver: user,
+    //     amount: amount,
+    //   })
+    intc_1 // 1
+    itxn_field TypeEnum
+    intc_0 // 0
+    itxn_field Fee
+    // smart_contracts/zombies_contract/contract.algo.ts:232-237
+    // itxn
+    //   .payment({
+    //     receiver: user,
+    //     amount: amount,
+    //   })
+    //   .submit();
+    itxn_submit
+
+recordBattle_after_if_else@6:
+    // smart_contracts/zombies_contract/contract.algo.ts:316
+    // this.updateLastActive(Txn.sender);
+    txn Sender
+    callsub updateLastActive
+    // smart_contracts/zombies_contract/contract.algo.ts:287
+    // public recordBattle(zombieIndex: uint64, won: boolean): boolean {
+    bytec_0 // 0x151f7c7580
+    log
+    intc_1 // 1
+    return
+
+recordBattle_else_body@5:
+    // smart_contracts/zombies_contract/contract.algo.ts:47
+    // public zombieLossCount = BoxMap<bytes, uint64>({ keyPrefix: Bytes`zlc_` });
+    bytec 17 // "zlc_"
+    swap
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:312
+    // const currentLosses: uint64 = this.zombieLossCount(zombieKey).value;
+    dup
+    box_get
+    assert // Box must have value
+    btoi
+    // smart_contracts/zombies_contract/contract.algo.ts:313
+    // this.zombieLossCount(zombieKey).value = currentLosses + Uint64(1);
+    intc_1 // 1
+    +
+    itob
+    box_put
+    b recordBattle_after_if_else@6
+
+
+// smart_contracts/zombies_contract/contract.algo.ts::AlgoZombiesContract.renameZombie[routing]() -> void:
+renameZombie:
+    // smart_contracts/zombies_contract/contract.algo.ts:324
+    // public renameZombie(zombieIndex: uint64, newName: bytes): boolean {
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_2 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    txna ApplicationArgs 2
+    dup
+    intc_0 // 0
+    extract_uint16 // on error: invalid array length header
+    pushint 2 // 2
+    +
+    dig 1
+    len
+    ==
+    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
+    extract 2 0
+    // smart_contracts/zombies_contract/contract.algo.ts:325
+    // ensureBudget(5000);
+    pushint 5000 // 5000
+    intc_0 // 0
+    callsub ensure_budget
+    // smart_contracts/zombies_contract/contract.algo.ts:327
+    // this.assertUserRegistered(Txn.sender);
+    txn Sender
+    callsub assertUserRegistered
+    // smart_contracts/zombies_contract/contract.algo.ts:34
+    // public userZombieCount = BoxMap<bytes, uint64>({ keyPrefix: Bytes`uzc_` });
+    bytec_2 // "uzc_"
+    // smart_contracts/zombies_contract/contract.algo.ts:329
+    // const userKey: bytes = this.getUserKey(Txn.sender);
+    txn Sender
+    // smart_contracts/zombies_contract/contract.algo.ts:34
+    // public userZombieCount = BoxMap<bytes, uint64>({ keyPrefix: Bytes`uzc_` });
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:330
+    // const zombieCount: uint64 = this.userZombieCount(userKey).value;
+    box_get
+    assert // Box must have value
+    btoi
+    // smart_contracts/zombies_contract/contract.algo.ts:332
+    // assert(zombieIndex < zombieCount, "Invalid zombie index");
+    dig 2
+    >
+    assert // Invalid zombie index
+    // smart_contracts/zombies_contract/contract.algo.ts:333
+    // assert(newName.length > 0, "Name cannot be empty");
+    dup
+    len
+    dup
+    assert // Name cannot be empty
+    // smart_contracts/zombies_contract/contract.algo.ts:334
+    // assert(newName.length <= 32, "Name too long (max 32 bytes)");
+    intc_3 // 32
+    <=
+    assert // Name too long (max 32 bytes)
+    // smart_contracts/zombies_contract/contract.algo.ts:336
+    // const zombieKey: bytes = this.getZombieKey(Txn.sender, zombieIndex);
+    txn Sender
+    // smart_contracts/zombies_contract/contract.algo.ts:70
+    // return account.bytes.concat(itob(zombieIndex));
+    uncover 2
+    itob
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:43
+    // public zombieName = BoxMap<bytes, bytes>({ keyPrefix: Bytes`zn_` });
+    bytec 15 // "zn_"
+    swap
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:337
+    // this.zombieName(zombieKey).value = newName;
+    dup
+    box_del
+    pop
+    swap
+    box_put
+    // smart_contracts/zombies_contract/contract.algo.ts:339
+    // this.updateLastActive(Txn.sender);
+    txn Sender
+    callsub updateLastActive
+    // smart_contracts/zombies_contract/contract.algo.ts:324
+    // public renameZombie(zombieIndex: uint64, newName: bytes): boolean {
+    bytec_0 // 0x151f7c7580
+    log
+    intc_1 // 1
+    return
+
+
+// smart_contracts/zombies_contract/contract.algo.ts::AlgoZombiesContract.getUserStats[routing]() -> void:
+getUserStats:
+    // smart_contracts/zombies_contract/contract.algo.ts:349
+    // public getUserStats(user: Account): [uint64, uint64, uint64, uint64, uint64, uint64] {
+    txna ApplicationArgs 1
+    dupn 2
+    len
+    intc_3 // 32
+    ==
+    assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>
+    // smart_contracts/zombies_contract/contract.algo.ts:39
+    // public userRegistered = BoxMap<bytes, uint64>({ keyPrefix: Bytes`ureg_` });
+    bytec 10 // "ureg_"
+    swap
+    concat
+    dup
+    // smart_contracts/zombies_contract/contract.algo.ts:352
+    // if (!this.userRegistered(userKey).exists || this.userRegistered(userKey).value === Uint64(0)) {
+    box_len
+    bury 1
+    bz getUserStats_if_body@3
+    dup
+    box_get
+    assert // Box must have value
+    btoi
+    bnz getUserStats_after_if_else@4
+
+getUserStats_if_body@3:
+    // smart_contracts/zombies_contract/contract.algo.ts:353
+    // return [Uint64(0), Uint64(0), Uint64(0), Uint64(0), Uint64(0), Uint64(0)];
+    pushbytes 0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+
+getUserStats_after_inlined_smart_contracts/zombies_contract/contract.algo.ts::AlgoZombiesContract.getUserStats@5:
+    // smart_contracts/zombies_contract/contract.algo.ts:349
+    // public getUserStats(user: Account): [uint64, uint64, uint64, uint64, uint64, uint64] {
+    bytec 9 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_1 // 1
+    return
+
+getUserStats_after_if_else@4:
+    // smart_contracts/zombies_contract/contract.algo.ts:34
+    // public userZombieCount = BoxMap<bytes, uint64>({ keyPrefix: Bytes`uzc_` });
+    bytec_2 // "uzc_"
+    dig 2
+    dup
+    cover 2
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:357
+    // this.userZombieCount(userKey).value,
+    box_get
+    assert // Box must have value
+    btoi
+    // smart_contracts/zombies_contract/contract.algo.ts:35
+    // public userCurrentLesson = BoxMap<bytes, uint64>({ keyPrefix: Bytes`ucl_` });
+    bytec 12 // "ucl_"
+    dig 2
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:358
+    // this.userCurrentLesson(userKey).value,
+    box_get
+    assert // Box must have value
+    btoi
+    // smart_contracts/zombies_contract/contract.algo.ts:36
+    // public userTotalScore = BoxMap<bytes, uint64>({ keyPrefix: Bytes`uts_` });
+    bytec 13 // "uts_"
+    dig 3
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:359
+    // this.userTotalScore(userKey).value,
+    box_get
+    assert // Box must have value
+    btoi
+    // smart_contracts/zombies_contract/contract.algo.ts:38
+    // public userTotalRewards = BoxMap<bytes, uint64>({ keyPrefix: Bytes`utr_` });
+    bytec 7 // "utr_"
+    dig 4
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:360
+    // this.userTotalRewards(userKey).value,
+    box_get
+    assert // Box must have value
+    btoi
+    // smart_contracts/zombies_contract/contract.algo.ts:37
+    // public userLastActive = BoxMap<bytes, uint64>({ keyPrefix: Bytes`ula_` });
+    bytec 14 // "ula_"
+    dig 5
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:361
+    // this.userLastActive(userKey).value,
+    box_get
+    assert // Box must have value
+    btoi
+    // smart_contracts/zombies_contract/contract.algo.ts:54
+    // public userRewardCount = BoxMap<bytes, uint64>({ keyPrefix: Bytes`urc_` });
+    bytec 8 // "urc_"
+    uncover 6
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:362
+    // this.userRewardCount(userKey).value,
+    box_get
+    assert // Box must have value
+    btoi
+    // smart_contracts/zombies_contract/contract.algo.ts:356-363
+    // return [
+    //   this.userZombieCount(userKey).value,
+    //   this.userCurrentLesson(userKey).value,
+    //   this.userTotalScore(userKey).value,
+    //   this.userTotalRewards(userKey).value,
+    //   this.userLastActive(userKey).value,
+    //   this.userRewardCount(userKey).value,
+    // ];
+    uncover 5
+    itob
+    uncover 5
+    itob
+    concat
+    uncover 4
+    itob
+    concat
+    uncover 3
+    itob
+    concat
+    uncover 2
+    itob
+    concat
+    swap
+    itob
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:349
+    // public getUserStats(user: Account): [uint64, uint64, uint64, uint64, uint64, uint64] {
+    b getUserStats_after_inlined_smart_contracts/zombies_contract/contract.algo.ts::AlgoZombiesContract.getUserStats@5
+
+
+// smart_contracts/zombies_contract/contract.algo.ts::AlgoZombiesContract.getZombie[routing]() -> void:
+getZombie:
+    // smart_contracts/zombies_contract/contract.algo.ts:369
+    // public getZombie(user: Account, zombieIndex: uint64): [bytes, uint64, uint64, uint64, uint64, uint64] {
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_3 // 32
+    ==
+    assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>
+    txna ApplicationArgs 2
+    dup
+    len
+    intc_2 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    // smart_contracts/zombies_contract/contract.algo.ts:70
+    // return account.bytes.concat(itob(zombieIndex));
+    itob
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:43
+    // public zombieName = BoxMap<bytes, bytes>({ keyPrefix: Bytes`zn_` });
+    bytec 15 // "zn_"
+    dig 1
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:372
+    // assert(this.zombieName(zombieKey).exists, "Zombie does not exist");
+    dup
+    box_len
+    bury 1
+    assert // Zombie does not exist
+    // smart_contracts/zombies_contract/contract.algo.ts:375
+    // this.zombieName(zombieKey).value,
+    box_get
+    pop
+    swap
+    // smart_contracts/zombies_contract/contract.algo.ts:44
+    // public zombieLevel = BoxMap<bytes, uint64>({ keyPrefix: Bytes`zl_` });
+    bytec 16 // "zl_"
+    dig 1
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:376
+    // this.zombieLevel(zombieKey).value,
+    box_get
+    assert // Box must have value
+    btoi
+    // smart_contracts/zombies_contract/contract.algo.ts:45
+    // public zombieDna = BoxMap<bytes, uint64>({ keyPrefix: Bytes`zd_` });
+    bytec 19 // "zd_"
+    dig 2
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:377
+    // this.zombieDna(zombieKey).value,
+    box_get
+    assert // Box must have value
+    btoi
+    // smart_contracts/zombies_contract/contract.algo.ts:46
+    // public zombieWinCount = BoxMap<bytes, uint64>({ keyPrefix: Bytes`zwc_` });
+    bytec 11 // "zwc_"
+    dig 3
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:378
+    // this.zombieWinCount(zombieKey).value,
+    box_get
+    assert // Box must have value
+    btoi
+    // smart_contracts/zombies_contract/contract.algo.ts:47
+    // public zombieLossCount = BoxMap<bytes, uint64>({ keyPrefix: Bytes`zlc_` });
+    bytec 17 // "zlc_"
+    dig 4
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:379
+    // this.zombieLossCount(zombieKey).value,
+    box_get
+    assert // Box must have value
+    btoi
+    // smart_contracts/zombies_contract/contract.algo.ts:48
+    // public zombieCreatedAt = BoxMap<bytes, uint64>({ keyPrefix: Bytes`zca_` });
+    bytec 20 // "zca_"
+    uncover 5
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:380
+    // this.zombieCreatedAt(zombieKey).value,
+    box_get
+    assert // Box must have value
+    btoi
+    // smart_contracts/zombies_contract/contract.algo.ts:374-381
+    // return [
+    //   this.zombieName(zombieKey).value,
+    //   this.zombieLevel(zombieKey).value,
+    //   this.zombieDna(zombieKey).value,
+    //   this.zombieWinCount(zombieKey).value,
+    //   this.zombieLossCount(zombieKey).value,
+    //   this.zombieCreatedAt(zombieKey).value,
+    // ];
+    dig 5
+    len
+    itob
+    extract 6 2
+    uncover 6
+    concat
+    uncover 5
+    itob
+    pushbytes 0x002a
+    swap
+    concat
+    uncover 5
+    itob
+    concat
+    uncover 4
+    itob
+    concat
+    uncover 3
+    itob
+    concat
+    uncover 2
+    itob
+    concat
+    swap
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:369
+    // public getZombie(user: Account, zombieIndex: uint64): [bytes, uint64, uint64, uint64, uint64, uint64] {
+    bytec 9 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_1 // 1
+    return
+
+
+// smart_contracts/zombies_contract/contract.algo.ts::AlgoZombiesContract.isLessonCompleted[routing]() -> void:
+isLessonCompleted:
+    // smart_contracts/zombies_contract/contract.algo.ts:387
+    // public isLessonCompleted(user: Account, lessonId: uint64): boolean {
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_3 // 32
+    ==
+    assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>
+    txna ApplicationArgs 2
+    dup
+    len
+    intc_2 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    // smart_contracts/zombies_contract/contract.algo.ts:78
+    // return account.bytes.concat(itob(lessonId));
+    itob
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:51
+    // public lessonCompleted = BoxMap<bytes, uint64>({ keyPrefix: Bytes`lc_` });
+    bytec 21 // "lc_"
+    swap
+    concat
+    dup
+    // smart_contracts/zombies_contract/contract.algo.ts:390
+    // if (!this.lessonCompleted(lessonKey).exists) {
+    box_len
+    bury 1
+    bnz isLessonCompleted_after_if_else@3
+    // smart_contracts/zombies_contract/contract.algo.ts:391
+    // return false;
+    intc_0 // 0
+
+isLessonCompleted_after_inlined_smart_contracts/zombies_contract/contract.algo.ts::AlgoZombiesContract.isLessonCompleted@4:
+    // smart_contracts/zombies_contract/contract.algo.ts:387
+    // public isLessonCompleted(user: Account, lessonId: uint64): boolean {
+    pushbytes 0x00
+    intc_0 // 0
+    uncover 2
+    setbit
+    bytec 9 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_1 // 1
+    return
+
+isLessonCompleted_after_if_else@3:
+    // smart_contracts/zombies_contract/contract.algo.ts:394
+    // return this.lessonCompleted(lessonKey).value === Uint64(1);
+    dup
+    box_get
+    assert // Box must have value
+    btoi
+    intc_1 // 1
+    ==
+    // smart_contracts/zombies_contract/contract.algo.ts:387
+    // public isLessonCompleted(user: Account, lessonId: uint64): boolean {
+    b isLessonCompleted_after_inlined_smart_contracts/zombies_contract/contract.algo.ts::AlgoZombiesContract.isLessonCompleted@4
+
+
+// smart_contracts/zombies_contract/contract.algo.ts::AlgoZombiesContract.getContractStats[routing]() -> void:
+getContractStats:
+    // smart_contracts/zombies_contract/contract.algo.ts:401
+    // return [this.totalUsers.value, this.totalZombies.value, this.totalLessons.value, this.rewardPerLesson.value];
+    intc_0 // 0
+    // smart_contracts/zombies_contract/contract.algo.ts:26
+    // public totalUsers = GlobalState<uint64>({ initialValue: Uint64(0) });
+    bytec_3 // "totalUsers"
+    // smart_contracts/zombies_contract/contract.algo.ts:401
+    // return [this.totalUsers.value, this.totalZombies.value, this.totalLessons.value, this.rewardPerLesson.value];
+    app_global_get_ex
+    assert // check GlobalState exists
+    intc_0 // 0
+    // smart_contracts/zombies_contract/contract.algo.ts:27
+    // public totalZombies = GlobalState<uint64>({ initialValue: Uint64(0) });
+    bytec 4 // "totalZombies"
+    // smart_contracts/zombies_contract/contract.algo.ts:401
+    // return [this.totalUsers.value, this.totalZombies.value, this.totalLessons.value, this.rewardPerLesson.value];
+    app_global_get_ex
+    assert // check GlobalState exists
+    intc_0 // 0
+    // smart_contracts/zombies_contract/contract.algo.ts:29
+    // public totalLessons = GlobalState<uint64>({ initialValue: Uint64(50) });
+    bytec_1 // "totalLessons"
+    // smart_contracts/zombies_contract/contract.algo.ts:401
+    // return [this.totalUsers.value, this.totalZombies.value, this.totalLessons.value, this.rewardPerLesson.value];
+    app_global_get_ex
+    assert // check GlobalState exists
+    intc_0 // 0
+    // smart_contracts/zombies_contract/contract.algo.ts:30
+    // public rewardPerLesson = GlobalState<uint64>({ initialValue: Uint64(100_000) }); // 0.1 ALGO
+    bytec 5 // "rewardPerLesson"
+    // smart_contracts/zombies_contract/contract.algo.ts:401
+    // return [this.totalUsers.value, this.totalZombies.value, this.totalLessons.value, this.rewardPerLesson.value];
+    app_global_get_ex
+    assert // check GlobalState exists
+    uncover 3
+    itob
+    uncover 3
+    itob
+    concat
+    uncover 2
+    itob
+    concat
+    swap
+    itob
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:400
+    // public getContractStats(): [uint64, uint64, uint64, uint64] {
+    bytec 9 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_1 // 1
+    return
+
+
+// smart_contracts/zombies_contract/contract.algo.ts::AlgoZombiesContract.isUserRegistered[routing]() -> void:
+isUserRegistered:
+    // smart_contracts/zombies_contract/contract.algo.ts:407
+    // public isUserRegistered(user: Account): boolean {
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_3 // 32
+    ==
+    assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>
+    // smart_contracts/zombies_contract/contract.algo.ts:39
+    // public userRegistered = BoxMap<bytes, uint64>({ keyPrefix: Bytes`ureg_` });
+    bytec 10 // "ureg_"
+    swap
+    concat
+    dup
+    // smart_contracts/zombies_contract/contract.algo.ts:410
+    // if (!this.userRegistered(userKey).exists) {
+    box_len
+    bury 1
+    bnz isUserRegistered_after_if_else@3
+    // smart_contracts/zombies_contract/contract.algo.ts:411
+    // return false;
+    intc_0 // 0
+
+isUserRegistered_after_inlined_smart_contracts/zombies_contract/contract.algo.ts::AlgoZombiesContract.isUserRegistered@4:
+    // smart_contracts/zombies_contract/contract.algo.ts:407
+    // public isUserRegistered(user: Account): boolean {
+    pushbytes 0x00
+    intc_0 // 0
+    uncover 2
+    setbit
+    bytec 9 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_1 // 1
+    return
+
+isUserRegistered_after_if_else@3:
+    // smart_contracts/zombies_contract/contract.algo.ts:414
+    // return this.userRegistered(userKey).value === Uint64(1);
+    dup
+    box_get
+    assert // Box must have value
+    btoi
+    intc_1 // 1
+    ==
+    // smart_contracts/zombies_contract/contract.algo.ts:407
+    // public isUserRegistered(user: Account): boolean {
+    b isUserRegistered_after_inlined_smart_contracts/zombies_contract/contract.algo.ts::AlgoZombiesContract.isUserRegistered@4
+
+
+// smart_contracts/zombies_contract/contract.algo.ts::AlgoZombiesContract.updateRewardPerLesson[routing]() -> void:
+updateRewardPerLesson:
+    // smart_contracts/zombies_contract/contract.algo.ts:422
+    // public updateRewardPerLesson(newReward: uint64): boolean {
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_2 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    // smart_contracts/zombies_contract/contract.algo.ts:423
+    // assert(Txn.sender === this.contractOwner.value, "Only owner can update");
+    txn Sender
+    intc_0 // 0
+    // smart_contracts/zombies_contract/contract.algo.ts:28
+    // public contractOwner = GlobalState<Account>();
+    bytec 6 // "contractOwner"
+    // smart_contracts/zombies_contract/contract.algo.ts:423
+    // assert(Txn.sender === this.contractOwner.value, "Only owner can update");
+    app_global_get_ex
+    assert // check GlobalState exists
+    ==
+    assert // Only owner can update
+    // smart_contracts/zombies_contract/contract.algo.ts:424
+    // assert(newReward > Uint64(0), "Reward must be positive");
+    dup
+    assert // Reward must be positive
+    // smart_contracts/zombies_contract/contract.algo.ts:30
+    // public rewardPerLesson = GlobalState<uint64>({ initialValue: Uint64(100_000) }); // 0.1 ALGO
+    bytec 5 // "rewardPerLesson"
+    // smart_contracts/zombies_contract/contract.algo.ts:426
+    // this.rewardPerLesson.value = newReward;
+    swap
+    app_global_put
+    // smart_contracts/zombies_contract/contract.algo.ts:422
+    // public updateRewardPerLesson(newReward: uint64): boolean {
+    bytec_0 // 0x151f7c7580
+    log
+    intc_1 // 1
+    return
+
+
+// smart_contracts/zombies_contract/contract.algo.ts::AlgoZombiesContract.updateTotalLessons[routing]() -> void:
+updateTotalLessons:
+    // smart_contracts/zombies_contract/contract.algo.ts:434
+    // public updateTotalLessons(newTotal: uint64): boolean {
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_2 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    // smart_contracts/zombies_contract/contract.algo.ts:435
+    // assert(Txn.sender === this.contractOwner.value, "Only owner can update");
+    txn Sender
+    intc_0 // 0
+    // smart_contracts/zombies_contract/contract.algo.ts:28
+    // public contractOwner = GlobalState<Account>();
+    bytec 6 // "contractOwner"
+    // smart_contracts/zombies_contract/contract.algo.ts:435
+    // assert(Txn.sender === this.contractOwner.value, "Only owner can update");
+    app_global_get_ex
+    assert // check GlobalState exists
+    ==
+    assert // Only owner can update
+    // smart_contracts/zombies_contract/contract.algo.ts:436
+    // assert(newTotal >= this.totalLessons.value, "Cannot reduce lessons");
+    intc_0 // 0
+    // smart_contracts/zombies_contract/contract.algo.ts:29
+    // public totalLessons = GlobalState<uint64>({ initialValue: Uint64(50) });
+    bytec_1 // "totalLessons"
+    // smart_contracts/zombies_contract/contract.algo.ts:436
+    // assert(newTotal >= this.totalLessons.value, "Cannot reduce lessons");
+    app_global_get_ex
+    assert // check GlobalState exists
+    dig 1
+    <=
+    assert // Cannot reduce lessons
+    // smart_contracts/zombies_contract/contract.algo.ts:29
+    // public totalLessons = GlobalState<uint64>({ initialValue: Uint64(50) });
+    bytec_1 // "totalLessons"
+    // smart_contracts/zombies_contract/contract.algo.ts:438
+    // this.totalLessons.value = newTotal;
+    swap
+    app_global_put
+    // smart_contracts/zombies_contract/contract.algo.ts:434
+    // public updateTotalLessons(newTotal: uint64): boolean {
+    bytec_0 // 0x151f7c7580
+    log
+    intc_1 // 1
+    return
+
+
+// smart_contracts/zombies_contract/contract.algo.ts::AlgoZombiesContract.fundContract[routing]() -> void:
+fundContract:
+    // smart_contracts/zombies_contract/contract.algo.ts:447
+    // assert(Txn.sender === this.contractOwner.value, "Only owner can fund");
+    txn Sender
+    intc_0 // 0
+    // smart_contracts/zombies_contract/contract.algo.ts:28
+    // public contractOwner = GlobalState<Account>();
+    bytec 6 // "contractOwner"
+    // smart_contracts/zombies_contract/contract.algo.ts:447
+    // assert(Txn.sender === this.contractOwner.value, "Only owner can fund");
+    app_global_get_ex
+    assert // check GlobalState exists
+    ==
+    assert // Only owner can fund
+    // smart_contracts/zombies_contract/contract.algo.ts:446
+    // public fundContract(): boolean {
+    bytec_0 // 0x151f7c7580
+    log
+    intc_1 // 1
+    return
+
+
+// smart_contracts/zombies_contract/contract.algo.ts::AlgoZombiesContract.emergencyWithdraw[routing]() -> void:
+emergencyWithdraw:
+    // smart_contracts/zombies_contract/contract.algo.ts:455
+    // public emergencyWithdraw(amount: uint64): boolean {
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_2 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    // smart_contracts/zombies_contract/contract.algo.ts:456
+    // assert(Txn.sender === this.contractOwner.value, "Only owner");
+    txn Sender
+    intc_0 // 0
+    // smart_contracts/zombies_contract/contract.algo.ts:28
+    // public contractOwner = GlobalState<Account>();
+    bytec 6 // "contractOwner"
+    // smart_contracts/zombies_contract/contract.algo.ts:456
+    // assert(Txn.sender === this.contractOwner.value, "Only owner");
+    app_global_get_ex
+    assert // check GlobalState exists
+    swap
+    dig 1
+    ==
+    assert // Only owner
+    // smart_contracts/zombies_contract/contract.algo.ts:458-464
+    // itxn
+    //   .payment({
+    //     receiver: this.contractOwner.value,
+    //     amount: amount,
+    //     fee: Uint64(0),
+    //   })
+    //   .submit();
+    itxn_begin
+    itxn_field Receiver
+    itxn_field Amount
+    // smart_contracts/zombies_contract/contract.algo.ts:458-463
+    // itxn
+    //   .payment({
+    //     receiver: this.contractOwner.value,
+    //     amount: amount,
+    //     fee: Uint64(0),
+    //   })
+    intc_1 // 1
+    itxn_field TypeEnum
+    // smart_contracts/zombies_contract/contract.algo.ts:462
+    // fee: Uint64(0),
+    intc_0 // 0
+    itxn_field Fee
+    // smart_contracts/zombies_contract/contract.algo.ts:458-464
+    // itxn
+    //   .payment({
+    //     receiver: this.contractOwner.value,
+    //     amount: amount,
+    //     fee: Uint64(0),
+    //   })
+    //   .submit();
+    itxn_submit
+    // smart_contracts/zombies_contract/contract.algo.ts:455
+    // public emergencyWithdraw(amount: uint64): boolean {
+    bytec_0 // 0x151f7c7580
+    log
+    intc_1 // 1
+    return
+
+
+// smart_contracts/zombies_contract/contract.algo.ts::AlgoZombiesContract.assertUserRegistered(account: bytes) -> void:
+assertUserRegistered:
+    // smart_contracts/zombies_contract/contract.algo.ts:84
+    // private assertUserRegistered(account: Account): void {
+    proto 1 0
+    // smart_contracts/zombies_contract/contract.algo.ts:39
+    // public userRegistered = BoxMap<bytes, uint64>({ keyPrefix: Bytes`ureg_` });
+    bytec 10 // "ureg_"
+    frame_dig -1
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:86
+    // assert(this.userRegistered(userKey).exists, "User not registered");
+    dup
+    box_len
+    bury 1
+    assert // User not registered
+    // smart_contracts/zombies_contract/contract.algo.ts:87
+    // assert(this.userRegistered(userKey).value === Uint64(1), "User not registered");
+    box_get
+    pop
+    btoi
+    intc_1 // 1
+    ==
+    assert // User not registered
+    retsub
+
+
+// smart_contracts/zombies_contract/contract.algo.ts::AlgoZombiesContract.updateLastActive(account: bytes) -> void:
+updateLastActive:
+    // smart_contracts/zombies_contract/contract.algo.ts:93
+    // private updateLastActive(account: Account): void {
+    proto 1 0
+    // smart_contracts/zombies_contract/contract.algo.ts:95
+    // this.userLastActive(userKey).value = Global.latestTimestamp;
+    global LatestTimestamp
+    // smart_contracts/zombies_contract/contract.algo.ts:37
+    // public userLastActive = BoxMap<bytes, uint64>({ keyPrefix: Bytes`ula_` });
+    bytec 14 // "ula_"
+    frame_dig -1
+    concat
+    // smart_contracts/zombies_contract/contract.algo.ts:95
+    // this.userLastActive(userKey).value = Global.latestTimestamp;
+    swap
+    itob
+    box_put
+    retsub
