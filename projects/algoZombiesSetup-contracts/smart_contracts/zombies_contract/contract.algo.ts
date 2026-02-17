@@ -21,7 +21,7 @@ import { itob } from "@algorandfoundation/algorand-typescript/op";
  * Stores user progress, achievements, and rewards on Algorand blockchain
  */
 
-export class AlgoZombiesContract extends Contract {
+export class AlgoZombiesContract extends Contract  {
   // ============ Global State ============
   public totalUsers = GlobalState<uint64>({ initialValue: Uint64(0) });
   public totalZombies = GlobalState<uint64>({ initialValue: Uint64(0) });
